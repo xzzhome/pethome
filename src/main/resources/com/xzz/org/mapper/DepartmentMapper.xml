@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzz.org.mapper.DepartmentMapper">
+
+    <!--保存一个对象：void save(Department department);-->
+    <insert id="save" parameterType="Department">
+        insert into t_department (sn,name,dirPath,state,manager_id,parent_id) values (
+        #{sn},#{name},#{dirPath},#{state},#{manager_id},#{parent_id})
+    </insert>
+
+    <!--移除一个对象：void remove(Long id);-->
+    <delete id="remove" parameterType="Long">
+        DELETE FROM t_department WHERE id=#{id}
+    </delete>
+
+    <!--更新一个对象：void update(Department department);-->
+    <update id="update" parameterType="Department">
+        UPDATE t_department SET sn=#{sn},name=#{name},dirPath=#{dirPath},state=#{state},
+        manager_id=#{manager_id},parent_id=#{parent_id} WHERE id=#{id}
+    </update>
+
+    <!--加载一个对象：Department loadById(Long id);-->
+    <select id="loadById" parameterType="Long" resultType="Department">
+        SELECT * FROM t_department WHERE id=#{id}
+    </select>
+
+    <!--加载所有对象：List<Department> loadAll();-->
+    <select id="loadAll" resultType="Department">
+        SELECT * FROM t_department
+    </select>
+
+    <!--分页：查询总数量：Long queryCount(DepartmentQuery query);-->
+    <select id="queryCount" resultType="Integer" >
+        SELECT count(*) FROM t_department
+    </select>
+
+    <!--分页：查询当前页数据：List<Department> queryData(DepartmentQuery query);-->
+    <select id="queryData" resultType="Department" >
+        SELECT * FROM t_department limit #{begin},#{pageSize}
+    </select>
+
+</mapper>

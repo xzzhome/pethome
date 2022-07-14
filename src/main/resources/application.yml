@@ -1,0 +1,16 @@
+server:
+  port: 8080 #端口号，默认是8080
+#连接数据库的四个必要参数，其他数据源参数有默认值
+spring:
+  datasource:
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql:///pethome?useUnicode=true&characterEncoding=utf8
+#配置别名 和扫描mapper文件【约定大于配置】
+mybatis:
+  type-aliases-package: com.xzz.org.domain,com.xzz.org.query,com.xzz.user.domain
+#配置日志等级
+logging:
+  level:
+    cn.itsource: trace
