@@ -50,6 +50,9 @@ public class DepartmentServiceImpl implements IDepartmentService {
     @Override
     public PageList<Department> queryPage(DepartmentQuery query) {
         Integer totals = mapper.queryCount(query);
+        if (totals==null || totals==0){
+            return  new PageList<>();
+        }
         List<Department> data = mapper.queryData(query);
         return new PageList<>(totals,data);
     }
