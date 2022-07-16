@@ -37,8 +37,31 @@
     </select>
 
     <!--分页：查询当前页数据：List<Department> queryData(DepartmentQuery query);-->
-    <select id="queryData" resultType="Department" >
-        SELECT * FROM t_department limit #{begin},#{pageSize}
+    <select id="queryData" resultMap="DepartmentMap" >
+        SELECT d.*,e.id eid,e.username eusername,p.id pid,p.name pname FROM t_department d
+        join t_employee e on d.manager_id = e.id
+        join t_department p on d.parent_id = p.id
+        limit #{begin},#{pageSize}
     </select>
+    <!--对e.id eid,e.username,p.id pid,p.name pname，也就是其他表的关联属性要手动映射-->
+    <resultMap id="DepartmentMap" type="Department">
+        <!-- 普通属性 -->
+        <id property="id" column="id"></id>
+        <result property="sn" column="sn"></result>
+        <result property="name" column="name"></result>
+        <result property="dirPath" column="dirPath"></result>
+        <result property="state" column="state"></result>
+        <!-- 关联属性 -->
+        <!-- private Employee manager; -->
+        <association property="manager" javaType="Employee">
+            <id property="id" column="eid"></id>
+            <result property="username" column="eusername"></result>
+        </association>
+        <!--private Department parent;-->
+        <association property="parent" javaType="Department">
+            <id property="id" column="pid"></id>
+            <result property="name" column="pname"></result>
+        </association>
+    </resultMap>
 
 </mapper>
