@@ -1,10 +1,10 @@
 package com.xzz.org.controller;
 
 import com.xzz.basic.PageList;
+import com.xzz.basic.util.JsonResult;
 import com.xzz.org.domain.Department;
 import com.xzz.org.query.DepartmentQuery;
 import com.xzz.org.service.impl.DepartmentServiceImpl;
-import com.xzz.org.util.AjaxResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -38,13 +38,13 @@ public class DepartmentController {
     //删除
     @DeleteMapping("/{id}")
     @ApiOperation(value = "通过ID删除" )
-    public AjaxResult delete(@PathVariable("id") Long id){
+    public JsonResult delete(@PathVariable("id") Long id){
         try {
             departmentService.del(id);
-            return new AjaxResult();
+            return JsonResult.me();
         } catch (Exception e) {
             e.printStackTrace();
-            return new AjaxResult(false,"删除失败");
+            return JsonResult.me().setMsg("删除失败");
         }
     }
 
@@ -63,17 +63,17 @@ public class DepartmentController {
     //添加或修改
     @PutMapping
     @ApiOperation(value = "添加或修改" )
-    public AjaxResult addOrUpdate(@RequestBody Department department){
+    public JsonResult addOrUpdate(@RequestBody Department department){
         try {
             if(department.getId()==null){
                 departmentService.add(department);
             }else{
                 departmentService.update(department);
             }
-            return new AjaxResult();
+            return JsonResult.me();
         } catch (Exception e) {
             e.printStackTrace();
-            return new AjaxResult(false,"操作失败");
+            return JsonResult.me().setMsg("操作失败");
         }
     }
 
