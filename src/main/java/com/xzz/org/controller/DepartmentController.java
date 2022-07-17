@@ -14,8 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/department")
-//接口文档的注解
-@Api(value = "部门的API",description="部门相关的CRUD功能")
+@Api(value = "部门的API",description="部门相关的CRUD功能")//接口文档的注解
 public class DepartmentController {
 
     @Resource

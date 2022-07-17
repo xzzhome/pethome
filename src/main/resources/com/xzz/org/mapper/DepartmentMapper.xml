@@ -36,14 +36,6 @@
         SELECT count(*) FROM t_department
     </select>
 
-    <!--分页：查询当前页数据：List<Department> queryData(DepartmentQuery query);-->
-    <select id="queryData" resultMap="DepartmentMap" >
-        SELECT d.*,e.id eid,e.username eusername,p.id pid,p.name pname FROM t_department d
-        join t_employee e on d.manager_id = e.id
-        join t_department p on d.parent_id = p.id
-        limit #{begin},#{pageSize}
-    </select>
-    <!--对e.id eid,e.username,p.id pid,p.name pname，也就是其他表的关联属性要手动映射-->
     <resultMap id="DepartmentMap" type="Department">
         <!-- 普通属性 -->
         <id property="id" column="id"></id>
@@ -51,18 +43,54 @@
         <result property="name" column="name"></result>
         <result property="dirPath" column="dirPath"></result>
         <result property="state" column="state"></result>
+        <result property="manager_id" column="manager_id"></result>
+        <result property="parent_id" column="parent_id"></result>
         <!-- 关联属性 -->
-        <!-- private Employee manager; -->
+        <association property="manager" column="manager_id" select="findManager" javaType="Employee"></association>
+        <association property="parent" column="parent_id" select="findparent" javaType="Department"></association>
+    </resultMap>
+    <!--主表查询结果表-->
+    <select id="queryData" resultMap="DepartmentMap" >
+        select * from t_department limit #{begin},#{pageSize}
+    </select>
+    <!--员工查询结果表，id映射主表外键-->
+    <select id="findManager" resultType="Employee">
+        select * from  t_employee where id=#{manager_id}
+    </select>
+    <!--上级查询结果表，id映射主表外键-->
+    <select id="findparent" resultType="Department">
+        select * from t_department where id=#{parent_id}
+    </select>
+
+    <!--分页：查询当前页数据：List<Department> queryData(DepartmentQuery query);-->
+    <!--<select id="queryData" resultMap="DepartmentMap" >
+        SELECT d.*,e.id eid,e.username eusername,p.id pid,p.name pname FROM t_department d
+        join t_employee e on d.manager_id = e.id
+        join t_department p on d.parent_id = p.id
+        limit #{begin},#{pageSize}
+    </select>
+    &lt;!&ndash;对e.id eid,e.username,p.id pid,p.name pname，也就是其他表的关联属性要手动映射&ndash;&gt;
+    <resultMap id="DepartmentMap" type="Department">
+        &lt;!&ndash; 普通属性 &ndash;&gt;
+        <id property="id" column="id"></id>
+        <result property="sn" column="sn"></result>
+        <result property="name" column="name"></result>
+        <result property="dirPath" column="dirPath"></result>
+        <result property="state" column="state"></result>
+        &lt;!&ndash; 关联属性 &ndash;&gt;
+        &lt;!&ndash; private Employee manager; &ndash;&gt;
         <association property="manager" javaType="Employee">
             <id property="id" column="eid"></id>
             <result property="username" column="eusername"></result>
         </association>
-        <!--private Department parent;-->
+        &lt;!&ndash;private Department parent;&ndash;&gt;
         <association property="parent" javaType="Department">
             <id property="id" column="pid"></id>
             <result property="name" column="pname"></result>
         </association>
-    </resultMap>
+    </resultMap>-->
+
+
 
 
 </mapper>
