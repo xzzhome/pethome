@@ -16,4 +16,6 @@ public class BaseQuery {
     public Integer getBegin(){
         return (this.currentPage - 1) * this.pageSize;
     }
+    //高级查询 = 关键字查询
+    private String keyword;
 }

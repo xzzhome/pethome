@@ -20,4 +20,6 @@ public interface IDepartmentService {
 
     //分页查询，之后传给页面的    数量和    数据
     PageList<Department> queryPage(DepartmentQuery query);
+
+    void patchDelete(List<Long> ids);
 }

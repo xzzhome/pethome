@@ -2,9 +2,9 @@ package com.xzz.org.controller;
 
 import com.xzz.basic.PageList;
 import com.xzz.basic.util.JsonResult;
-import com.xzz.org.domain.Department;
-import com.xzz.org.query.DepartmentQuery;
-import com.xzz.org.service.impl.DepartmentServiceImpl;
+import com.xzz.org.domain.Employee;
+import com.xzz.org.query.EmployeeQuery;
+import com.xzz.org.service.impl.EmployeeServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -13,25 +13,25 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/department")
-@Api(value = "部门的API",description="部门相关的CRUD功能")//接口文档的注解
-public class DepartmentController {
+@RequestMapping("/employee")
+@Api(value = "员工的API",description="员工相关的CRUD功能")//接口文档的注解
+public class EmployeeController {
 
     @Resource
-    public DepartmentServiceImpl departmentService;
+    public EmployeeServiceImpl employeeService;
 
     //查询单个对象
     @GetMapping("/{id}")
     @ApiOperation(value = "通过ID查询" )
-    public Department findOne(@PathVariable("id") Long id){
-        return departmentService.findById(id);
+    public Employee findOne(@PathVariable("id") Long id){
+        return employeeService.findById(id);
     }
 
     //查询所有对象
     @GetMapping
     @ApiOperation(value = "查询所有对象" )
-    public List<Department> findAll(){
-        return departmentService.findAll();
+    public List<Employee> findAll(){
+        return employeeService.findAll();
     }
 
     //删除
@@ -39,7 +39,7 @@ public class DepartmentController {
     @ApiOperation(value = "通过ID删除" )
     public JsonResult delete(@PathVariable("id") Long id){
         try {
-            departmentService.del(id);
+            employeeService.del(id);
             return JsonResult.me();
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,7 +52,7 @@ public class DepartmentController {
     @ApiOperation(value = "批量删除接口")
     public JsonResult patchDelete(@RequestBody List<Long> ids){
         try {
-            departmentService.patchDelete(ids);
+            employeeService.patchDelete(ids);
             return JsonResult.me();
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,12 +63,12 @@ public class DepartmentController {
     //添加或修改
     @PutMapping
     @ApiOperation(value = "添加或修改" )
-    public JsonResult addOrUpdate(@RequestBody Department department){
+    public JsonResult addOrUpdate(@RequestBody Employee employee){
         try {
-            if(department.getId()==null){
-                departmentService.add(department);
+            if(employee.getId()==null){
+                employeeService.add(employee);
             }else{
-                departmentService.update(department);
+                employeeService.update(employee);
             }
             return JsonResult.me();
         } catch (Exception e) {
@@ -80,7 +80,7 @@ public class DepartmentController {
     //分页查询或高级查询
     @PostMapping
     @ApiOperation(value = "分页查询或高级查询" )
-    public PageList<Department> queryPage(@RequestBody DepartmentQuery departmentQuery){
-        return departmentService.queryPage(departmentQuery);
+    public PageList<Employee> queryPage(@RequestBody EmployeeQuery employeeQuery){
+        return employeeService.queryPage(employeeQuery);
     }
 }

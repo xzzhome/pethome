@@ -28,8 +28,10 @@ public class Employee{
     private Integer state = 1;
     //员工所属部门ID
     private Long department_id;
+    private Department UserDept;
     //登录信息ID
     private Long logininfo_id;
     //店铺ID：为空=平台系统管理员，不为空=店铺管理员
     private Long shop_id;
+    private shop shopManager;
 }

@@ -1,6 +1,8 @@
 package com.xzz;
 
 import com.xzz.org.domain.Department;
+import com.xzz.org.mapper.DepartmentMapper;
+import com.xzz.org.query.DepartmentQuery;
 import com.xzz.org.service.impl.DepartmentServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +19,8 @@ class DepartmentTest {
 
     @Resource
     private DepartmentServiceImpl service;
+    @Resource
+    private DepartmentMapper mapper;
 
     @Test
     void add() {
@@ -43,5 +47,8 @@ class DepartmentTest {
 
     @Test
     void queryPage() {
+
     }
+
+
 }

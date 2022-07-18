@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzz.org.mapper.EmployeeMapper">
+
+    <!--保存一个对象：void save(Employee employee);-->
+    <insert id="save" parameterType="Employee">
+        insert into t_employee (username,phone,email,state,salt,password,age,department_id,logininfo_id,shop_id) values (
+        #{username},#{phone},#{email},#{state},#{salt},#{password},#{age},#{department_id},#{logininfo_id},#{shop_id})
+    </insert>
+
+    <!--移除一个对象：void remove(Long id);-->
+    <delete id="remove" parameterType="Long">
+        DELETE FROM t_employee WHERE id=#{id}
+    </delete>
+
+    <!--更新一个对象：void update(Employee employee);-->
+    <update id="update" parameterType="Employee">
+        UPDATE t_employee SET username=#{username},phone=#{phone},email=#{email},state=#{state},salt=#{salt},password=#{password},
+        age=#{age},department_id=#{department_id},logininfo_id=#{logininfo_id},shop_id=#{shop_id} WHERE id=#{id}
+    </update>
+
+    <!--加载一个对象：Employee loadById(Long id);-->
+    <select id="loadById" parameterType="Long" resultType="Employee">
+        SELECT * FROM t_employee WHERE id=#{id}
+    </select>
+
+    <!--加载所有对象：List<Employee> loadAll();-->
+    <select id="loadAll" resultType="Employee">
+        SELECT * FROM t_employee
+    </select>
+
+    <!--分页：查询总数量：Long queryCount(EmployeeQuery query);-->
+    <select id="queryCount" resultType="Integer" >
+        SELECT count(*) FROM t_employee
+        <include refid="querySql"></include>
+    </select>
+
+    <resultMap id="EmployeeMap" type="Employee">
+        <!-- 普通属性 -->
+        <id property="id" column="id"></id>
+        <result property="username" column="username"></result>
+        <result property="phone" column="phone"></result>
+        <result property="email" column="email"></result>
+        <result property="salt" column="salt"></result>
+        <result property="password" column="password"></result>
+        <result property="age" column="age"></result>
+        <result property="state" column="state"></result>
+        <result property="department_id" column="department_id"></result>
+        <result property="logininfo_id" column="logininfo_id"></result>
+        <result property="shop_id" column="shop_id"></result>
+        <!-- 关联属性 -->
+        <association property="UserDept" javaType="Employee" column="department_id" select="findUserDept"></association>
+        <association property="shopManager" javaType="Employee" column="shop_id" select="findshopManager"></association>
+    </resultMap>
+    <!--主表查询结果表-->
+    <select id="queryData" resultMap="EmployeeMap" >
+        select * from t_employee
+        <include refid="querySql"></include>
+        limit #{begin},#{pageSize}
+    </select>
+    <!--员工查询结果表，id映射主表外键-->
+    <select id="findUserDept" resultType="Employee">
+        select * from  t_employee where id=#{department_id}
+    </select>
+    <!--上级查询结果表，id映射主表外键-->
+    <select id="findshopManager" resultType="Employee">
+        select * from t_employee where id=#{shop_id}
+    </select>
+
+    <!--高级查询与分页绑定，对keyword对totals和data，都产生影响后，展示数据-->
+    <sql id="querySql">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and username like concat("%",#{keyword},"%")
+                /*or name like concat("%",#{keyword},"%")*/
+            </if>
+        </where>
+    </sql>
+
+    <!--批量删除-->
+    <delete id="patchDelete">
+        delete from t_employee where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--分页：查询当前页数据：List<Employee> queryData(EmployeeQuery query);-->
+    <!--<select id="queryData" resultMap="EmployeeMap" >
+        SELECT d.*,e.id eid,e.username eusername,p.id pid,p.name pname FROM t_employee d
+        join t_employee e on d.manager_id = e.id
+        join t_employee p on d.parent_id = p.id
+        limit #{begin},#{pageSize}
+    </select>
+    &lt;!&ndash;对e.id eid,e.username,p.id pid,p.name pname，也就是其他表的关联属性要手动映射&ndash;&gt;
+    <resultMap id="EmployeeMap" type="Employee">
+        &lt;!&ndash; 普通属性 &ndash;&gt;
+        <id property="id" column="id"></id>
+        <result property="sn" column="sn"></result>
+        <result property="name" column="name"></result>
+        <result property="dirPath" column="dirPath"></result>
+        <result property="state" column="state"></result>
+        &lt;!&ndash; 关联属性 &ndash;&gt;
+        &lt;!&ndash; private Employee manager; &ndash;&gt;
+        <association property="manager" javaType="Employee">
+            <id property="id" column="eid"></id>
+            <result property="username" column="eusername"></result>
+        </association>
+        &lt;!&ndash;private Employee parent;&ndash;&gt;
+        <association property="parent" javaType="Employee">
+            <id property="id" column="pid"></id>
+            <result property="name" column="pname"></result>
+        </association>
+    </resultMap>-->
+
+
+
+
+</mapper>

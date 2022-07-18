@@ -34,6 +34,7 @@
     <!--分页：查询总数量：Long queryCount(DepartmentQuery query);-->
     <select id="queryCount" resultType="Integer" >
         SELECT count(*) FROM t_department
+        <include refid="querySql"></include>
     </select>
 
     <resultMap id="DepartmentMap" type="Department">
@@ -46,12 +47,14 @@
         <result property="manager_id" column="manager_id"></result>
         <result property="parent_id" column="parent_id"></result>
         <!-- 关联属性 -->
-        <association property="manager" column="manager_id" select="findManager" javaType="Employee"></association>
-        <association property="parent" column="parent_id" select="findparent" javaType="Department"></association>
+        <association property="manager" javaType="Employee" column="manager_id" select="findManager"></association>
+        <association property="parent" javaType="Department" column="parent_id" select="findparent"></association>
     </resultMap>
     <!--主表查询结果表-->
     <select id="queryData" resultMap="DepartmentMap" >
-        select * from t_department limit #{begin},#{pageSize}
+        select * from t_department
+        <include refid="querySql"></include>
+        limit #{begin},#{pageSize}
     </select>
     <!--员工查询结果表，id映射主表外键-->
     <select id="findManager" resultType="Employee">
@@ -61,6 +64,24 @@
     <select id="findparent" resultType="Department">
         select * from t_department where id=#{parent_id}
     </select>
+
+    <!--高级查询与分页绑定，对keyword对totals和data，都产生影响后，展示数据-->
+    <sql id="querySql">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and sn like concat("%",#{keyword},"%")
+                or name like concat("%",#{keyword},"%")
+            </if>
+        </where>
+    </sql>
+
+    <!--批量删除-->
+    <delete id="patchDelete">
+        delete from t_department where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 
     <!--分页：查询当前页数据：List<Department> queryData(DepartmentQuery query);-->
     <!--<select id="queryData" resultMap="DepartmentMap" >

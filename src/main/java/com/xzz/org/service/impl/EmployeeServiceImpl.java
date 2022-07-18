@@ -1,10 +1,10 @@
 package com.xzz.org.service.impl;
 
 import com.xzz.basic.PageList;
-import com.xzz.org.domain.Department;
-import com.xzz.org.mapper.DepartmentMapper;
-import com.xzz.org.query.DepartmentQuery;
-import com.xzz.org.service.IDepartmentService;
+import com.xzz.org.domain.Employee;
+import com.xzz.org.mapper.EmployeeMapper;
+import com.xzz.org.query.EmployeeQuery;
+import com.xzz.org.service.IEmployeeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,15 +14,15 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
-public class DepartmentServiceImpl implements IDepartmentService {
+public class EmployeeServiceImpl implements IEmployeeService {
 
     @Resource
-    private DepartmentMapper mapper;
+    private EmployeeMapper mapper;
 
     @Transactional
     @Override
-    public void add(Department department) {
-        mapper.save(department);
+    public void add(Employee employee) {
+        mapper.save(employee);
     }
 
     @Transactional
@@ -33,27 +33,27 @@ public class DepartmentServiceImpl implements IDepartmentService {
 
     @Transactional
     @Override
-    public void update(Department department) {
-        mapper.update(department);
+    public void update(Employee employee) {
+        mapper.update(employee);
     }
 
     @Override
-    public Department findById(Long id) {
+    public Employee findById(Long id) {
         return mapper.loadById(id);
     }
 
     @Override
-    public List<Department> findAll() {
+    public List<Employee> findAll() {
         return mapper.loadAll();
     }
 
     @Override
-    public PageList<Department> queryPage(DepartmentQuery query) {
+    public PageList<Employee> queryPage(EmployeeQuery query) {
         Integer totals = mapper.queryCount(query);
         if (totals==null || totals==0){
             return  new PageList<>();
         }
-        List<Department> data = mapper.queryData(query);
+        List<Employee> data = mapper.queryData(query);
         return new PageList<>(totals,data);
     }
 

@@ -22,4 +22,6 @@ public interface DepartmentMapper {
 
     //分页：查询当前页数据
     List<Department> queryData(DepartmentQuery query);
+
+    void patchDelete(List<Long> ids);
 }
