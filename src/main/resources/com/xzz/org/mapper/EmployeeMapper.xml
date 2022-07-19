@@ -52,7 +52,7 @@
         <result property="shop_id" column="shop_id"></result>
         <!-- 关联属性 -->
         <association property="UserDept" javaType="Employee" column="department_id" select="findUserDept"></association>
-        <association property="shopManager" javaType="Employee" column="shop_id" select="findshopManager"></association>
+        <association property="shopManager" javaType="shop" column="shop_id" select="findshopManager"></association>
     </resultMap>
     <!--主表查询结果表-->
     <select id="queryData" resultMap="EmployeeMap" >
@@ -61,12 +61,12 @@
         limit #{begin},#{pageSize}
     </select>
     <!--员工查询结果表，id映射主表外键-->
-    <select id="findUserDept" resultType="Employee">
-        select * from  t_employee where id=#{department_id}
+    <select id="findUserDept" resultType="Department">
+        select * from  t_department where id=#{department_id}
     </select>
     <!--上级查询结果表，id映射主表外键-->
-    <select id="findshopManager" resultType="Employee">
-        select * from t_employee where id=#{shop_id}
+    <select id="findshopManager" resultType="Shop">
+        select * from t_shop where id=#{shop_id}
     </select>
 
     <!--高级查询与分页绑定，对keyword对totals和data，都产生影响后，展示数据-->
@@ -74,7 +74,6 @@
         <where>
             <if test="keyword != null and keyword != ''">
                 and username like concat("%",#{keyword},"%")
-                /*or name like concat("%",#{keyword},"%")*/
             </if>
         </where>
     </sql>

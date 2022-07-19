@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Component
-public class shop {
+public class Shop {
     private Long id;
     private String name;
     private String tel;

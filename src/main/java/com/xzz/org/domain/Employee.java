@@ -33,5 +33,5 @@ public class Employee{
     private Long logininfo_id;
     //店铺ID：为空=平台系统管理员，不为空=店铺管理员
     private Long shop_id;
-    private shop shopManager;
+    private Shop shopManager;
 }
