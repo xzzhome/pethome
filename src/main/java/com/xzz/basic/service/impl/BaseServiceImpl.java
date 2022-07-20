@@ -4,6 +4,7 @@ import com.xzz.basic.mapper.BaseMapper;
 import com.xzz.basic.query.BaseQuery;
 import com.xzz.basic.query.PageList;
 import com.xzz.basic.service.IBaseService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,11 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 
-@Service
 @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
 public class BaseServiceImpl<T> implements IBaseService<T> {
 
-    @Resource
+    @Autowired
     private BaseMapper<T> baseMapper;
 
     @Transactional

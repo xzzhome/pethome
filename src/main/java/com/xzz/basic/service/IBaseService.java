@@ -2,7 +2,6 @@ package com.xzz.basic.service;
 
 import com.xzz.basic.query.BaseQuery;
 import com.xzz.basic.query.PageList;
-
 import java.util.List;
 
 public interface IBaseService<T> {

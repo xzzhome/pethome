@@ -1,5 +1,6 @@
 package com.xzz.org.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,9 +16,12 @@ public class Shop {
     private Long id;
     private String name;
     private String tel;
-    private Date registerTime;
+    @JsonFormat(pattern = "yyyy-MM-dd" , timezone = "GMT+8")
+    private Date registerTime = new Date();
     private Integer state;
     private String address;
     private String logo;
+    //店长ID
     private Long admin_id;
+    private Employee manager;
 }

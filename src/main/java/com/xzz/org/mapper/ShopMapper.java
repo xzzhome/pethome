@@ -2,9 +2,10 @@ package com.xzz.org.mapper;
 
 import com.xzz.basic.mapper.BaseMapper;
 import com.xzz.org.domain.Department;
+import com.xzz.org.domain.Shop;
 
 
-public interface DepartmentMapper extends BaseMapper<Department> {
+public interface ShopMapper extends BaseMapper<Shop> {
 
 
 }

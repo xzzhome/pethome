@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzz.org.mapper.ShopMapper">
+
+    <!--保存一个对象：void save(Shop shop);-->
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into t_shop (name,tel,state,registerTime,address,logo,admin_id) values (
+        #{name},#{tel},#{state},#{registerTime},#{address},#{logo},#{admin_id})
+    </insert>
+
+    <!--移除一个对象：void remove(Long id);-->
+    <delete id="remove" parameterType="Long">
+        DELETE FROM t_shop WHERE id=#{id}
+    </delete>
+
+    <!--更新一个对象：void update(Shop shop);-->
+    <update id="update" parameterType="Shop">
+        UPDATE t_shop SET name=#{name},tel=#{tel},state=#{state},registerTime=#{registerTime},
+        address=#{address},logo=#{logo},admin_id=#{admin_id} WHERE id=#{id}
+    </update>
+
+    <!--加载一个对象：Shop loadById(Long id);-->
+    <select id="loadById" parameterType="Long" resultType="Shop">
+        SELECT * FROM t_shop WHERE id=#{id}
+    </select>
+
+    <!--加载所有对象：List<Shop> loadAll();-->
+    <select id="loadAll" resultType="Shop">
+        SELECT * FROM t_shop
+    </select>
+
+    <!--分页：查询总数量：Long queryCount(ShopQuery query);-->
+    <select id="queryCount" resultType="Integer" >
+        SELECT count(*) FROM t_shop
+        <include refid="querySql"></include>
+    </select>
+
+    <resultMap id="ShopMap" type="Shop">
+        <!-- 普通属性 -->
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="tel" column="tel"></result>
+        <result property="registerTime" column="registerTime"></result>
+        <result property="state" column="state"></result>
+        <result property="address" column="address"></result>
+        <result property="logo" column="logo"></result>
+        <result property="admin_id" column="admin_id"></result>
+        <!-- 关联属性 -->
+        <association property="manager" javaType="Employee" column="admin_id" select="findManager"></association>
+    </resultMap>
+    <!--主表查询结果表-->
+    <select id="queryData" resultMap="ShopMap" >
+        select * from t_shop
+        <include refid="querySql"></include>
+        limit #{begin},#{pageSize}
+    </select>
+    <!--员工查询结果表，id映射主表外键-->
+    <select id="findManager" resultType="Employee">
+        select * from  t_employee where id=#{admin_id}
+    </select>
+
+
+    <!--高级查询与分页绑定，对keyword对totals和data，都产生影响后，展示数据-->
+    <sql id="querySql">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and name like concat("%",#{keyword},"%")
+            </if>
+        </where>
+    </sql>
+
+    <!--批量删除-->
+    <delete id="patchDelete">
+        delete from t_shop where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
