@@ -1,4 +1,4 @@
-package com.xzz.basic;
+package com.xzz.basic.query;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

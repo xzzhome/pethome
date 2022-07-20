@@ -1,6 +1,6 @@
 package com.xzz.org.controller;
 
-import com.xzz.basic.PageList;
+import com.xzz.basic.query.PageList;
 import com.xzz.basic.util.JsonResult;
 import com.xzz.org.domain.Department;
 import com.xzz.org.query.DepartmentQuery;
@@ -82,5 +82,12 @@ public class DepartmentController {
     @ApiOperation(value = "分页查询或高级查询" )
     public PageList<Department> queryPage(@RequestBody DepartmentQuery departmentQuery){
         return departmentService.queryPage(departmentQuery);
+    }
+
+    //查询部门树
+    @GetMapping("/deptTree")
+    @ApiOperation(value = "获取部门树-无限极接口")
+    public List<Department> deptTree(){
+        return departmentService.deptTree();
     }
 }

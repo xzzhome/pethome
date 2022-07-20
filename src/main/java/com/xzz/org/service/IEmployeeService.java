@@ -1,6 +1,6 @@
 package com.xzz.org.service;
 
-import com.xzz.basic.PageList;
+import com.xzz.basic.query.PageList;
 import com.xzz.org.domain.Employee;
 import com.xzz.org.query.EmployeeQuery;
 

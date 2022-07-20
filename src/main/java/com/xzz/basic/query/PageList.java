@@ -1,4 +1,4 @@
-package com.xzz.basic;
+package com.xzz.basic.query;
 
 import com.xzz.org.domain.Department;
 import lombok.AllArgsConstructor;

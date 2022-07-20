@@ -5,7 +5,7 @@
 <mapper namespace="com.xzz.org.mapper.DepartmentMapper">
 
     <!--保存一个对象：void save(Department department);-->
-    <insert id="save" parameterType="Department">
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         insert into t_department (sn,name,dirPath,state,manager_id,parent_id) values (
         #{sn},#{name},#{dirPath},#{state},#{manager_id},#{parent_id})
     </insert>

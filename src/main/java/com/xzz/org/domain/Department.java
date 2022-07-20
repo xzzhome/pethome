@@ -1,5 +1,6 @@
 package com.xzz.org.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,8 @@ public class Department{
     private Long parent_id;
     private Department parent;
 
-    //上级部门下的子部门（多对一）
+    //上级部门下的子部门
+    //部门树最后一级没有数据就不显示
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Department> children = new ArrayList<>();
 }

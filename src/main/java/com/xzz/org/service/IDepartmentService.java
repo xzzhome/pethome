@@ -1,6 +1,6 @@
 package com.xzz.org.service;
 
-import com.xzz.basic.PageList;
+import com.xzz.basic.query.PageList;
 import com.xzz.org.domain.Department;
 import com.xzz.org.query.DepartmentQuery;
 
@@ -22,4 +22,7 @@ public interface IDepartmentService {
     PageList<Department> queryPage(DepartmentQuery query);
 
     void patchDelete(List<Long> ids);
+
+    //无限级数
+    List<Department> deptTree();
 }
