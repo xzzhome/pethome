@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzz.system.mapper.SystemDetailMapper">
+
+    <!--保存一个对象：void save(SystemDetail systemDetail);-->
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into t_systemdictionarydetail(name,types_id) values (#{name},#{types_id})
+    </insert>
+
+    <!--移除一个对象：void remove(Long id);-->
+    <delete id="remove" parameterType="Long">
+        DELETE FROM t_systemdictionarydetail WHERE id=#{id}
+    </delete>
+
+    <!--更新一个对象：void update(SystemDetail systemDetail);-->
+    <update id="update" parameterType="SystemDetail">
+        UPDATE t_systemdictionarydetail SET name=#{name},types_id=#{types_id}  WHERE id=#{id}
+    </update>
+
+    <!--加载一个对象：SystemDetail loadById(Long id);-->
+    <select id="loadById" parameterType="Long" resultType="SystemDetail">
+        SELECT * FROM t_systemdictionarydetail WHERE id=#{id}
+    </select>
+
+    <!--加载所有对象：List<SystemDetail> loadAll();-->
+    <select id="loadAll" resultType="SystemDetail">
+        SELECT * FROM t_systemdictionarydetail
+    </select>
+
+    <!--分页：查询总数量：Long queryCount(SystemDetailQuery query);-->
+    <select id="queryCount" resultType="Integer" >
+        SELECT count(*) FROM t_systemdictionarydetail
+        <include refid="querySql"></include>
+    </select>
+
+    <resultMap id="SystemDetailMap" type="SystemDetail">
+        <!-- 普通属性 -->
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="types_id" column="types_id"></result>
+        <!-- 关联属性 -->
+        <association property="systemType" javaType="SystemType" column="types_id" select="findType"></association>
+    </resultMap>
+    <!--主表查询结果表-->
+    <select id="queryData" resultMap="SystemDetailMap" >
+        select * from t_systemdictionarydetail
+        <include refid="querySql"></include>
+        limit #{begin},#{pageSize}
+    </select>
+    <!--员工查询结果表，id映射主表外键-->
+    <select id="findType" resultType="SystemType">
+        select * from  t_systemdictionarytype where id=#{types_id}
+    </select>
+
+
+    <!--高级查询与分页绑定，对keyword对totals和data，都产生影响后，展示数据-->
+    <sql id="querySql">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and name like concat("%",#{keyword},"%")
+            </if>
+        </where>
+    </sql>
+
+    <!--批量删除-->
+    <delete id="patchDelete">
+        delete from t_systemdictionarydetail where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

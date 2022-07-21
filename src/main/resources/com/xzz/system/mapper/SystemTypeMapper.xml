@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzz.system.mapper.SystemTypeMapper">
+
+    <!--保存一个对象：void save(SystemType systemType);-->
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into t_systemdictionarytype(name,sn) values (#{name},#{sn})
+    </insert>
+
+    <!--移除一个对象：void remove(Long id);-->
+    <delete id="remove" parameterType="Long">
+        DELETE FROM t_systemdictionarytype WHERE id=#{id}
+    </delete>
+
+    <!--更新一个对象：void update(SystemType systemType);-->
+    <update id="update" parameterType="SystemType">
+        UPDATE t_systemdictionarytype SET name=#{name},sn=#{sn}  WHERE id=#{id}
+    </update>
+
+    <!--加载一个对象：SystemType loadById(Long id);-->
+    <select id="loadById" parameterType="Long" resultType="SystemType">
+        SELECT * FROM t_systemdictionarytype WHERE id=#{id}
+    </select>
+
+    <!--加载所有对象：List<SystemType> loadAll();-->
+    <select id="loadAll" resultType="SystemType">
+        SELECT * FROM t_systemdictionarytype
+    </select>
+
+    <!--分页：查询总数量：Long queryCount(SystemTypeQuery query);-->
+    <select id="queryCount" resultType="Integer" >
+        SELECT count(*) FROM t_systemdictionarytype
+        <include refid="querySql"></include>
+    </select>
+
+    <resultMap id="SystemTypeMap" type="SystemType">
+        <!-- 普通属性 -->
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="sn" column="sn"></result>
+    </resultMap>
+    <!--主表查询结果表-->
+    <select id="queryData" resultMap="SystemTypeMap" >
+        select * from t_systemdictionarytype
+        <include refid="querySql"></include>
+        limit #{begin},#{pageSize}
+    </select>
+
+
+
+    <!--高级查询与分页绑定，对keyword对totals和data，都产生影响后，展示数据-->
+    <sql id="querySql">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and name like concat("%",#{keyword},"%")
+            </if>
+        </where>
+    </sql>
+
+    <!--批量删除-->
+    <delete id="patchDelete">
+        delete from t_systemdictionarytype where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
