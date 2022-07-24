@@ -2,6 +2,8 @@ package com.xzz.system.controller;
 
 import com.xzz.basic.query.PageList;
 import com.xzz.basic.util.JsonResult;
+import com.xzz.org.domain.Department;
+import com.xzz.system.domain.SystemDetail;
 import com.xzz.system.domain.SystemType;
 import com.xzz.system.query.SystemTypeQuery;
 import com.xzz.system.service.impl.SystemTypeServiceImpl;
@@ -82,4 +84,11 @@ public class SystemTypeController {
     public PageList<SystemType> queryPage(@RequestBody SystemTypeQuery systemTypeQuery){
         return systemTypeService.queryPage(systemTypeQuery);
     }
+
+    //查询部门树
+    /*@GetMapping("/deptTree")
+    @ApiOperation(value = "获取部门树-无限极接口")
+    public List<SystemType> deptTree(){
+        return systemTypeService.deptTree();
+    }*/
 }
