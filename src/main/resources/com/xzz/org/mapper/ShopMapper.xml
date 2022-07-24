@@ -3,6 +3,10 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xzz.org.mapper.ShopMapper">
+    <!-- 店铺入驻：判断店铺是否入驻过：Shop loadByNameAndAddress(Shop shop); -->
+    <select id="loadByNameAndAddress" resultType="Shop">
+        select * from t_shop where name=#{name} and address=#{address}
+    </select>
 
     <!--保存一个对象：void save(Shop shop);-->
     <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
@@ -48,7 +52,7 @@
         <result property="logo" column="logo"></result>
         <result property="admin_id" column="admin_id"></result>
         <!-- 关联属性 -->
-        <association property="manager" javaType="Employee" column="admin_id" select="findManager"></association>
+        <association property="admin" javaType="Employee" column="admin_id" select="findManager"></association>
     </resultMap>
     <!--主表查询结果表-->
     <select id="queryData" resultMap="ShopMap" >
@@ -60,7 +64,6 @@
     <select id="findManager" resultType="Employee">
         select * from  t_employee where id=#{admin_id}
     </select>
-
 
     <!--高级查询与分页绑定，对keyword对totals和data，都产生影响后，展示数据-->
     <sql id="querySql">

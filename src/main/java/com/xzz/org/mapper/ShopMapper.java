@@ -8,4 +8,5 @@ import com.xzz.org.domain.Shop;
 public interface ShopMapper extends BaseMapper<Shop> {
 
 
+    Shop loadByNameAndAddress(Shop shop);
 }

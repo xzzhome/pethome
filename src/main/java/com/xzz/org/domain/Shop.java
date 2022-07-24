@@ -18,10 +18,10 @@ public class Shop {
     private String tel;
     @JsonFormat(pattern = "yyyy-MM-dd" , timezone = "GMT+8")
     private Date registerTime = new Date();
-    private Integer state;
+    private Integer state=1;
     private String address;
     private String logo;
     //店长ID
     private Long admin_id;
-    private Employee manager;
+    private Employee admin;
 }

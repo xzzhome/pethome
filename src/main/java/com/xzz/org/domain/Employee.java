@@ -22,6 +22,7 @@ public class Employee{
     private String salt;
     //员工密码
     private String password;
+    private String comfirmPassword;
     //员工年龄
     private Integer age;
     //员工状态：1启用 0禁用

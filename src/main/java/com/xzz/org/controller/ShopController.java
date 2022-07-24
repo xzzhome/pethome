@@ -1,5 +1,6 @@
 package com.xzz.org.controller;
 
+import com.xzz.basic.exception.BusinessException;
 import com.xzz.basic.query.PageList;
 import com.xzz.basic.util.JsonResult;
 import com.xzz.org.domain.Shop;
@@ -82,5 +83,20 @@ public class ShopController {
     @ApiOperation(value = "分页查询或高级查询" )
     public PageList<Shop> queryPage(@RequestBody ShopQuery shopQuery){
         return shopService.queryPage(shopQuery);
+    }
+
+    //商家入驻接口 //先写主体，再写细节
+    @ApiOperation(value = "商家入驻",notes = "")
+    @PostMapping("/settlement")
+    public JsonResult settlement(@RequestBody Shop shop){
+        try {
+            shopService.settlement(shop);
+            return JsonResult.me();
+        } catch (BusinessException e){ //业务异常捕获
+            return JsonResult.me().setMsg("入驻失败!");
+        } catch (Exception e) { //500
+            e.printStackTrace();
+            return JsonResult.me().setMsg("系统异常,请稍后重试!");
+        }
     }
 }

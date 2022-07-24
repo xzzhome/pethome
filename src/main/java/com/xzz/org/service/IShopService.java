@@ -6,4 +6,5 @@ import com.xzz.org.domain.Shop;
 
 public interface IShopService extends IBaseService<Shop>  {
 
+    void settlement(Shop shop);
 }

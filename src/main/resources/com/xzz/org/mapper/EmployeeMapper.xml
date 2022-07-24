@@ -5,7 +5,7 @@
 <mapper namespace="com.xzz.org.mapper.EmployeeMapper">
 
     <!--保存一个对象：void save(Employee employee);-->
-    <insert id="save" parameterType="Employee">
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         insert into t_employee (username,phone,email,state,salt,password,age,department_id,logininfo_id,shop_id) values (
         #{username},#{phone},#{email},#{state},#{salt},#{password},#{age},#{department_id},#{logininfo_id},#{shop_id})
     </insert>

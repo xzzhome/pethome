@@ -7,6 +7,7 @@ public class JsonResult {
 
     private Boolean success=true;
     private String msg;
+    private Object resultObj;
 
     public static JsonResult me(){
         return new JsonResult();
@@ -15,6 +16,11 @@ public class JsonResult {
     public JsonResult setMsg(String msg) {
         this.success = false;
         this.msg = msg;
+        return this;
+    }
+
+    public JsonResult setResultObj(String filePath) {
+        this.resultObj = filePath;
         return this;
     }
 }
