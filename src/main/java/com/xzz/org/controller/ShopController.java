@@ -2,15 +2,19 @@ package com.xzz.org.controller;
 
 import com.xzz.basic.exception.BusinessException;
 import com.xzz.basic.query.PageList;
+import com.xzz.basic.util.ExcelUtils;
 import com.xzz.basic.util.JsonResult;
 import com.xzz.org.domain.Shop;
+import com.xzz.org.domain.ShopAuditLog;
 import com.xzz.org.query.ShopQuery;
 import com.xzz.org.service.impl.ShopServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -85,7 +89,7 @@ public class ShopController {
         return shopService.queryPage(shopQuery);
     }
 
-    //商家入驻接口 //先写主体，再写细节
+    //商家入驻接口
     @ApiOperation(value = "商家入驻",notes = "")
     @PostMapping("/settlement")
     public JsonResult settlement(@RequestBody Shop shop){
@@ -93,10 +97,56 @@ public class ShopController {
             shopService.settlement(shop);
             return JsonResult.me();
         } catch (BusinessException e){ //业务异常捕获
-            return JsonResult.me().setMsg("入驻失败!");
+            return JsonResult.me().setMsg(e.getMessage());
         } catch (Exception e) { //500
             e.printStackTrace();
             return JsonResult.me().setMsg("系统异常,请稍后重试!");
+        }
+    }
+
+    //接口：店铺审核通过
+    @PostMapping("/audit/pass")
+    @ApiOperation(value = "店铺审核通过")
+    public JsonResult pass(@RequestBody ShopAuditLog log){
+        try {
+            shopService.pass(log);
+            return JsonResult.me();//true + "操作成功"
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonResult.me().setMsg("审核失败");
+        }
+    }
+
+    //接口：店铺审核驳回
+    @PostMapping("/audit/reject")
+    @ApiOperation(value = "店铺审核驳回")
+    public JsonResult reject(@RequestBody ShopAuditLog log){
+        try {
+            shopService.reject(log);
+            return JsonResult.me();//true + "操作成功"
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonResult.me().setMsg("驳回失败");
+        }
+    }
+
+    //导出
+    @GetMapping("/export")
+    public void export( HttpServletResponse response){
+        try {
+            List<Shop> list = shopService.findAll();
+            ExcelUtils.exportExcel(list, null, "店铺信息", Shop.class, "shop.xlsx", response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //导入
+    @PostMapping("/importExcel")
+    public void importExcel(@RequestPart("file") MultipartFile file){
+        List<Shop> list = ExcelUtils.importExcel(file,0,1,Shop.class);
+        for (Shop shop:list) {
+            System.out.println(shop);
         }
     }
 }

@@ -7,6 +7,17 @@ spring:
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql:///pethome?useUnicode=true&characterEncoding=utf8
+  mail:
+    host: smtp.qq.com   # 设置邮箱主机(服务商),这里使用QQ邮件服务器
+    username: 1091526909@qq.com  # 设置用户名 - 发送方
+    password: ftqnoejmffwhhbbb   # 设置密码，该处的密码是QQ邮箱开启SMTP的授权码而非QQ密码
+    properties:
+      mail:
+        smtp:
+          auth: true  # 必须进行授权认证，它的目的就是阻止他人任意乱发邮件
+          starttls: #SMTP加密方式:连接到一个TLS保护连接
+            enable: true
+            required: true
 #配置别名 和扫描mapper文件【约定大于配置】
 mybatis:
   type-aliases-package: com.xzz.*.domain,com.xzz.*.query
