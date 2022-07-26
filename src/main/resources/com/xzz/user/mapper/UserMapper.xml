@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzz.user.mapper.UserMapper">
+
+    <!--保存一个对象：void save(User user);-->
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into t_user(username,phone,email,salt,password,state,age,createtime,headImg,logininfo_id) values 
+        (#{username},#{phone},#{email},#{salt},#{password},#{state},#{age},#{createtime},#{headImg},#{logininfo_id})
+    </insert>
+
+    <!--移除一个对象：void remove(Long id);-->
+    <delete id="remove" parameterType="Long">
+        DELETE FROM t_user WHERE id=#{id}
+    </delete>
+
+    <!--更新一个对象：void update(User user);-->
+    <update id="update" parameterType="User">
+        UPDATE t_user SET username=#{username},phone=#{phone},email=#{email},salt=#{salt},password=#{password}
+        ,state=#{state},age=#{age},createtime=#{createtime},headImg=#{headImg},logininfo_id =#{logininfo_id}
+        WHERE id=#{id}
+    </update>
+
+    <!--加载一个对象：User loadById(Long id);-->
+    <select id="loadById" parameterType="Long" resultType="User">
+        SELECT * FROM t_user WHERE id=#{id}
+    </select>
+
+    <!--加载所有对象：List<User> loadAll();-->
+    <select id="loadAll" resultType="User">
+        SELECT * FROM t_user
+    </select>
+
+    <!--分页：查询总数量：Long queryCount(UserQuery query);-->
+    <select id="queryCount" resultType="Integer" >
+        SELECT count(*) FROM t_user
+        <include refid="querySql"></include>
+    </select>
+
+    <resultMap id="UserMap" type="User">
+        <!-- 普通属性 -->
+        <id property="id" column="id"></id>
+        <result property="username" column="username"></result>
+        <result property="phone" column="phone"></result>
+        <result property="email" column="email"></result>
+        <result property="salt" column="salt"></result>
+        <result property="password" column="password"></result>
+        <result property="state" column="state"></result>
+        <result property="age" column="age"></result>
+        <result property="createtime" column="createtime"></result>
+        <result property="headImg" column="headImg"></result>
+        <result property="logininfo_id" column="logininfo_id"></result>
+        <!-- 关联属性 -->
+        <association property="logininfo" javaType="Logininfo" column="logininfo_id" select="findType"></association>
+    </resultMap>
+    <!--主表查询结果表-->
+    <select id="queryData" resultMap="UserMap" >
+        select * from t_user
+        <include refid="querySql"></include>
+        limit #{begin},#{pageSize}
+    </select>
+    <!--员工查询结果表，id映射主表外键-->
+    <select id="findType" resultType="Logininfo">
+        select * from  t_logininfo where id=#{logininfo_id}
+    </select>
+
+
+    <!--高级查询与分页绑定，对keyword对totals和data，都产生影响后，展示数据-->
+    <sql id="querySql">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and username like concat("%",#{keyword},"%")
+            </if>
+        </where>
+    </sql>
+
+    <!--批量删除-->
+    <delete id="patchDelete">
+        delete from t_user where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
+

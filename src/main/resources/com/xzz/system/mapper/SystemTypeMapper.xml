@@ -14,7 +14,6 @@
         DELETE FROM t_systemdictionarytype WHERE id=#{id}
     </delete>
 
-
     <!--更新一个对象：void update(SystemType systemType);-->
     <update id="update" parameterType="SystemType">
         UPDATE t_systemdictionarytype SET name=#{name},sn=#{sn}  WHERE id=#{id}
