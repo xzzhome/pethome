@@ -6,6 +6,7 @@ import com.xzz.basic.util.ExcelUtils;
 import com.xzz.basic.util.JsonResult;
 import com.xzz.org.domain.Shop;
 import com.xzz.org.domain.ShopAuditLog;
+import com.xzz.org.dto.ShopDto;
 import com.xzz.org.query.ShopQuery;
 import com.xzz.org.service.impl.ShopServiceImpl;
 import io.swagger.annotations.Api;
@@ -148,5 +149,11 @@ public class ShopController {
         for (Shop shop:list) {
             System.out.println(shop);
         }
+    }
+
+    //报表
+    @GetMapping("/echarts")
+    public List<ShopDto> echartsData(){
+        return shopService.getCountByState();
     }
 }

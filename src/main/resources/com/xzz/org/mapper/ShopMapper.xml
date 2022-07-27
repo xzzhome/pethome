@@ -3,6 +3,11 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xzz.org.mapper.ShopMapper">
+    <!--List<ShopDto> getCountByState();-->
+    <select id="getCountByState" resultType="ShopDto">
+        SELECT state,count(*) countNum FROM t_shop GROUP BY state ORDER BY state
+    </select>
+
     <!-- 店铺入驻：判断店铺是否入驻过：Shop loadByNameAndAddress(Shop shop); -->
     <select id="loadByNameAndAddress" resultType="Shop">
         select * from t_shop where name=#{name} and address=#{address}

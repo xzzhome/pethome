@@ -7,6 +7,7 @@ import com.xzz.basic.util.BaiduAuditUtils;
 import com.xzz.org.domain.Employee;
 import com.xzz.org.domain.Shop;
 import com.xzz.org.domain.ShopAuditLog;
+import com.xzz.org.dto.ShopDto;
 import com.xzz.org.mapper.EmployeeMapper;
 import com.xzz.org.mapper.ShopAuditLogMapper;
 import com.xzz.org.mapper.ShopMapper;
@@ -20,6 +21,7 @@ import org.springframework.util.StringUtils;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.List;
 
 
 @Service
@@ -134,5 +136,10 @@ public class ShopServiceImpl extends BaseServiceImpl<Shop> implements IShopServi
         helper.setTo("1091526909@qq.com");
         //发送
         javaMailSender.send(mimeMessage);
+    }
+
+    @Override
+    public List<ShopDto> getCountByState() {
+        return shopMapper.getCountByState();
     }
 }
