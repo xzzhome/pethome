@@ -1,5 +1,6 @@
 package com.xzz.basic.service.impl;
 
+import com.xzz.basic.Constant.VerifyCodeConstants;
 import com.xzz.basic.dto.SmsCodeDto;
 import com.xzz.basic.exception.BusinessException;
 import com.xzz.basic.service.IVerifyService;
@@ -64,7 +65,7 @@ public class VerifyServiceImpl implements IVerifyService {
             throw new BusinessException("该手机已经注册，请直接登录!");
         }
         //redis存值格式：key[register:18708146200] : value[code:time]
-        Object codeObj = redisTemplate.opsForValue().get("register:" + phone);
+        Object codeObj = redisTemplate.opsForValue().get(VerifyCodeConstants.REGISTER_CODE_PREFIX + phone);
         String code = null;
         if(codeObj != null){//没有过期
             String time = codeObj.toString().split(":")[1];
@@ -78,7 +79,7 @@ public class VerifyServiceImpl implements IVerifyService {
             code = StrUtils.getRandomString(4);
         }
         //将验证码数据添加到redis
-        redisTemplate.opsForValue().set("register:" + phone, code + ":" + System.currentTimeMillis(),3, TimeUnit.MINUTES);//存3分钟
+        redisTemplate.opsForValue().set(VerifyCodeConstants.REGISTER_CODE_PREFIX + phone, code + ":" + System.currentTimeMillis(),3, TimeUnit.MINUTES);//存3分钟
         //发短信
         //SmsUtils.sendSms(phone, "你的验证码为：" + code + "，请在3分钟之内使用!" );  //有次数
         System.out.println("你的验证码为：" + code + "，请在3分钟之内使用!");//可以这样测试

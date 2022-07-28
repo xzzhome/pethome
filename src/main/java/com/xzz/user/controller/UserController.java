@@ -1,8 +1,10 @@
 package com.xzz.user.controller;
 
+import com.xzz.basic.exception.BusinessException;
 import com.xzz.basic.query.PageList;
 import com.xzz.basic.util.JsonResult;
 import com.xzz.user.domain.User;
+import com.xzz.user.dto.UserDto;
 import com.xzz.user.query.UserQuery;
 import com.xzz.user.service.impl.UserServiceImpl;
 import io.swagger.annotations.Api;
@@ -82,6 +84,23 @@ public class UserController {
     @ApiOperation(value = "分页查询或高级查询" )
     public PageList<User> queryPage(@RequestBody UserQuery userQuery){
         return userService.queryPage(userQuery);
+    }
+
+    //用户注册
+    @PostMapping("/register/phone")
+    public JsonResult register(@RequestBody UserDto userDto){
+        try {
+            userService.phoneRegister(userDto);
+            return JsonResult.me();
+        }
+        catch (BusinessException e){
+            e.printStackTrace();
+            return JsonResult.me().setMsg("注册失败!"+e.getMessage());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return JsonResult.me().setMsg("系统错误!"+e.getMessage());
+        }
     }
 }
 

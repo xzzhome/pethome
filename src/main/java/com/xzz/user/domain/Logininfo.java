@@ -28,7 +28,7 @@ public class Logininfo  {
     /**
      * 启用状态：true可用，false禁用
      */
-    private Boolean disable;
+    private Boolean disable=true;
 
 
 
