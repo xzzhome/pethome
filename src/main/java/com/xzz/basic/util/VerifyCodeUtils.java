@@ -220,8 +220,4 @@ public class VerifyCodeUtils {
         }
     }
 
-    public static void main(String[] args) throws  Exception{
-        System.out.println(verifyCode(100, 30, "1234"));
-
-    }
 }

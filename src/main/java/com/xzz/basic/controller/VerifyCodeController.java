@@ -1,11 +1,11 @@
 package com.xzz.basic.controller;
 
+import com.xzz.basic.dto.SmsCodeDto;
+import com.xzz.basic.exception.BusinessException;
 import com.xzz.basic.service.IVerifyService;
 import com.xzz.basic.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 验证码接口
@@ -24,6 +24,25 @@ public class VerifyCodeController {
         try {
             String value = verifyService.getImgCode(key);
             return JsonResult.me().setResultObj(value);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonResult.me().setMsg("系统异常,请稍后重试!");
+        }
+    }
+
+    /**
+     * 获取手机验证码接口
+     * @param smsCodeDto
+     * @return
+     */
+    @PostMapping("/smsCode")
+    public JsonResult sendSmsCode(@RequestBody SmsCodeDto smsCodeDto){
+        try {
+            verifyService.sendSmsCode(smsCodeDto);
+            return new JsonResult();
+        } catch (BusinessException e) {
+            e.printStackTrace();
+            return JsonResult.me().setMsg("发送失败!"+e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             return JsonResult.me().setMsg("系统异常,请稍后重试!");
