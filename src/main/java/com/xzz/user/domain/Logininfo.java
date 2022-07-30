@@ -1,5 +1,6 @@
 package com.xzz.user.domain;
 
+import com.xzz.basic.domain.BaseDomain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,10 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Logininfo  {
+public class Logininfo extends BaseDomain {
 
-    private Long id;
-    
     private String username;
     
     private String phone;

@@ -1,8 +1,10 @@
 package com.xzz.user.controller;
 
+import com.xzz.basic.exception.BusinessException;
 import com.xzz.basic.query.PageList;
 import com.xzz.basic.util.JsonResult;
 import com.xzz.user.domain.Logininfo;
+import com.xzz.user.dto.LoginDto;
 import com.xzz.user.query.LogininfoQuery;
 import com.xzz.user.service.impl.LogininfoServiceImpl;
 import io.swagger.annotations.Api;
@@ -13,7 +15,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/logininfo")
+@RequestMapping("/login")
 @Api(value = "用户的API",description="用户相关的CRUD功能")//接口文档的注解
 public class LogininfoController {
 
@@ -82,6 +84,21 @@ public class LogininfoController {
     @ApiOperation(value = "分页查询或高级查询" )
     public PageList<Logininfo> queryPage(@RequestBody LogininfoQuery logininfoQuery){
         return logininfoService.queryPage(logininfoQuery);
+    }
+    
+    //登录
+    @PostMapping("/account")
+    public JsonResult accountLogin(@RequestBody LoginDto loginDto){
+        try {
+            //登录成功要返回token登录信息 - 代替session
+            return logininfoService.accountLogin(loginDto);
+        } catch (BusinessException e){
+            e.printStackTrace();
+            return JsonResult.me().setMsg("登录失败，"+e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonResult.me().setMsg("系统繁忙，请稍后重试!!!");
+        }
     }
 }
 

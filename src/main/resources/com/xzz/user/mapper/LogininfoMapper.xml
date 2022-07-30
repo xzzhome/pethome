@@ -3,6 +3,11 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xzz.user.mapper.LogininfoMapper">
+    <!-- Logininfo loadByAccount(LoginDto loginDto);-->
+    <select id="loadByAccount" resultType="Logininfo">
+        select * from t_logininfo where
+            (username = #{username} or phone = #{username} or email = #{username}) and type=#{loginType}
+    </select>
 
     <!--保存一个对象：void save(Logininfo Logininfo);-->
     <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id">

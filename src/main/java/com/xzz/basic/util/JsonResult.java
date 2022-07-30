@@ -19,8 +19,8 @@ public class JsonResult {
         return this;
     }
 
-    public JsonResult setResultObj(String filePath) {
-        this.resultObj = filePath;
+    public JsonResult setResultObj(Object resultObj) {
+        this.resultObj = resultObj;
         return this;
     }
 }

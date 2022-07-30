@@ -1,6 +1,7 @@
 package com.xzz.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.xzz.basic.domain.BaseDomain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
-
-    private Long id;
+public class User extends BaseDomain {
     
     private String username;
     

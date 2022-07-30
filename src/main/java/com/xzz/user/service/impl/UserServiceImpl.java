@@ -3,6 +3,7 @@ package com.xzz.user.service.impl;
 import com.xzz.basic.Constant.VerifyCodeConstants;
 import com.xzz.basic.exception.BusinessException;
 import com.xzz.basic.service.impl.BaseServiceImpl;
+import com.xzz.basic.util.JsonResult;
 import com.xzz.basic.util.Md5Utils;
 import com.xzz.basic.util.StrUtils;
 import com.xzz.user.domain.Logininfo;
@@ -18,7 +19,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl extends BaseServiceImpl<User> implements IUserService {
@@ -93,4 +98,5 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
         logininfo.setType(1);
         return logininfo;
     }
+
 }
