@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzz.user.mapper.WxUserMapper">
+    <!-- Wxuser loadByOpenid(String openid); -->
+    <select id="loadByOpenid" resultType="Wxuser">
+        SELECT * FROM t_wxuser WHERE openid=#{openid}
+    </select>
+
+    <!--保存一个对象：void save(Wxuser wxuser);-->
+    <insert id="save" parameterType="Wxuser" useGeneratedKeys="true" keyProperty="id">
+        insert into t_wxuser(
+            openid,nickname,sex,address,headimgurl,unionid,user_id)
+        values (#{openid},#{nickname},#{sex},#{address},#{headimgurl},#{unionid},#{user_id})
+    </insert>
+
+</mapper>
+

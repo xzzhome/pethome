@@ -84,4 +84,39 @@ public class VerifyServiceImpl implements IVerifyService {
         //SmsUtils.sendSms(phone, "你的验证码为：" + code + "，请在3分钟之内使用!" );  //有次数
         System.out.println("你的验证码为：" + code + "，请在3分钟之内使用!");//可以这样测试
     }
+
+    @Override
+    public void binderSmsCode(SmsCodeDto smsDto) {
+        String phone = smsDto.getPhone();
+
+        //1.校验 - 空值校验
+        if(StringUtils.isEmpty(phone)){
+            throw new BusinessException("手机号码不能为空!!!");
+        }
+
+        //5.redis存值格式：key[register:18708146200] : value[code:time]
+        Object redisSmsCode = redisTemplate.opsForValue().get(VerifyCodeConstants.REGISTER_CODE_PREFIX + phone);
+        String code = null;
+        if(redisSmsCode == null){//第一次发送 or 手机验证码过期了
+            //过期了就用新的验证码
+            code = StrUtils.getComplexRandomString(4);
+        }else{//没有过期
+            String time = redisSmsCode.toString().split(":")[1];
+            long intervalTime = System.currentTimeMillis() - Long.valueOf(time);
+            //6.没有过期 - 判断是否过了重发时间
+            if(intervalTime <= 1*60*1000){//没有过重发时间
+                throw new BusinessException("请勿重复获取验证码!!!");
+            }else{
+                //没有过期就用以前的验证码
+                code = redisSmsCode.toString().split(":")[0];
+            }
+        }
+        //7.将验证码存入redis：【register:18725556563 - 9527:1233555555】
+        //刷新了过期时间
+        redisTemplate.opsForValue().set(VerifyCodeConstants.REGISTER_CODE_PREFIX + phone,code+":"+System.currentTimeMillis(),3,TimeUnit.MINUTES);
+
+        //8.调用SmsUtils发送短信
+        //SmsUtil.sendSms(phone,"手机验证码为：" + code + ",请在3分钟内使用!!!");
+        System.out.println("手机验证码为：" + code + ",请在3分钟内使用!!!");
+    }
 }

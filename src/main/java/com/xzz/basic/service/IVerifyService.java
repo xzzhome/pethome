@@ -6,4 +6,6 @@ public interface IVerifyService {
     String getImgCode(String key);
 
     void sendSmsCode(SmsCodeDto smsCodeDto);
+
+    void binderSmsCode(SmsCodeDto smsDto);
 }

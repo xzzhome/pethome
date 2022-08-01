@@ -4,6 +4,7 @@ import com.xzz.basic.exception.BusinessException;
 import com.xzz.basic.query.PageList;
 import com.xzz.basic.util.JsonResult;
 import com.xzz.user.domain.Logininfo;
+import com.xzz.user.dto.BinderDto;
 import com.xzz.user.dto.LoginDto;
 import com.xzz.user.query.LogininfoQuery;
 import com.xzz.user.service.impl.LogininfoServiceImpl;
@@ -98,6 +99,42 @@ public class LogininfoController {
         } catch (Exception e) {
             e.printStackTrace();
             return JsonResult.me().setMsg("系统繁忙，请稍后重试!!!");
+        }
+    }
+
+    /**
+     * 微信登录接口
+     * @param code
+     * @return
+     */
+    @GetMapping("/wechat/{code}")
+    public JsonResult wechatLogin(@PathVariable("code") String code){
+        try {
+            return logininfoService.wechatLogin(code);
+        } catch (BusinessException e) {
+            e.printStackTrace();
+            return JsonResult.me().setMsg(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonResult.me().setMsg("系统异常，请稍后重试!!!");
+        }
+    }
+
+    /**
+     * 微信绑定接口
+     * @param binderDto
+     * @return
+     */
+    @PostMapping("/wechat/binder")
+    public JsonResult wechatBinder(@RequestBody BinderDto binderDto){
+        try {
+            return logininfoService.wechatBinder(binderDto);
+        } catch (BusinessException e) {
+            e.printStackTrace();
+            return JsonResult.me().setMsg(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonResult.me().setMsg("系统异常，请稍后重试!!!");
         }
     }
 }

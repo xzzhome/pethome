@@ -48,4 +48,21 @@ public class VerifyCodeController {
             return JsonResult.me().setMsg("系统异常,请稍后重试!");
         }
     }
+    /**
+     * 获取绑定微信手机验证码
+     * @return
+     */
+    @PostMapping("/binderSmsCode")
+    public JsonResult binderSmsCode(@RequestBody SmsCodeDto smsDto){
+        try {
+            verifyService.binderSmsCode(smsDto);
+            return new JsonResult();
+        } catch (BusinessException e) {
+            e.printStackTrace();
+            return JsonResult.me().setMsg("发送失败，" + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonResult.me().setMsg("系统繁忙!!!");
+        }
+    }
 }

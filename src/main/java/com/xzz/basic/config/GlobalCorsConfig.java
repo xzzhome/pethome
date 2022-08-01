@@ -22,6 +22,8 @@ public class GlobalCorsConfig {
         config.addAllowedOrigin("http://localhost:80");
         config.addAllowedOrigin("http://127.0.0.1");
         config.addAllowedOrigin("http://localhost");
+        config.addAllowedOrigin("http://bugtracker.itsource.cn");
+        config.addAllowedOrigin("http://bugtracker.itsource.cn:80");
 
         //2) 是否允许发送Cookie信息
         config.setAllowCredentials(true);

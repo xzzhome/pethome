@@ -6,4 +6,6 @@ import com.xzz.user.dto.LoginDto;
 
 public interface LogininfoMapper extends BaseMapper<Logininfo> {
     Logininfo loadByAccount(LoginDto loginDto);
+
+    Logininfo loadLogininfoByUserId(Long user_id);
 }
