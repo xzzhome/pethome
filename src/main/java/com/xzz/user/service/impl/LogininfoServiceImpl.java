@@ -162,7 +162,8 @@ public class LogininfoServiceImpl extends BaseServiceImpl<Logininfo> implements 
         }
         //6.将User对象的id设置到WxUser对象中
         wxuser.setUser_id(user.getId());
-        //7.将WxUser对象添加到数据微wxUserMapper.save(wxuser);//最后更新表t-wxuser
+        //7.将WxUser对象添加到数据微
+        wxUserMapper.save(wxuser);//最后更新表t-wxuser
 
         //8.做免密登录
         Logininfo logininfo = logininfoMapper.loadById(user.getLogininfo_id());
