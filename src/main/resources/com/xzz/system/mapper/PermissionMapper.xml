@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzz.system.mapper.PermissionMapper">
+
+    <!--加载对象-->
+    <select id="loadAll" resultType="Permission">
+        select * from t_permission
+    </select>
+
+    <!--Permission loadBySn(String permissionSn);-->
+    <select id="loadBySn" resultType="permission">
+        select * from t_permission where sn=#{sn}
+    </select>
+
+    <update id="update">
+        update t_permission set name = #{name},  url = #{url}, descs = #{descs}, sn = #{sn}
+        where id = #{id}
+    </update>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into t_permission(name, url, descs, sn ) values(
+        #{name}, #{url}, #{descs}, #{sn})
+    </insert>
+
+    <!--分页：查询总数量：Long queryCount(permission query);-->
+    <select id="queryCount" resultType="Integer" >
+        SELECT count(*) FROM t_permission
+        <include refid="querySql"></include>
+    </select>
+
+    <!--主表查询结果表-->
+    <select id="queryData" resultType="Permission" >
+        select * from t_permission
+        <include refid="querySql"></include>
+        limit #{begin},#{pageSize}
+    </select>
+
+    <!--高级查询与分页绑定，对keyword对totals和data，都产生影响后，展示数据-->
+    <sql id="querySql">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and name like concat("%",#{keyword},"%")
+            </if>
+        </where>
+    </sql>
+
+</mapper>

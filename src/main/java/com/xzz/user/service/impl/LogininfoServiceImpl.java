@@ -149,7 +149,7 @@ public class LogininfoServiceImpl extends BaseServiceImpl<Logininfo> implements 
                 .replace("OPENID",openId);
         String jsonStr = HttpUtil.httpGet(url);
         Wxuser wxuser = jsonStr2Wxuser(jsonStr);//绑定用户：t_wxUser【user_id】 绑定 t_user
-        //5.通过phone查询User
+        //5.通过phone查询User，用户曾经用手机号注册过
         User user = userMapper.loadByPhone(phone);
         //5.1.如果没有 - 则进行注册操作
         if(user == null){

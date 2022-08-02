@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzz.system.mapper.MenuMapper">
+    <!--保存对象-->
+    <insert id="save" parameterType="Menu" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into t_menu(name,component,url,icon,`index`,parent_id,intro,state) values(
+        #{name},#{component},#{url},#{icon},#{index},#{parent.id},#{intro},#{state})
+    </insert>
+
+    <!--删除对象-->
+    <delete id="remove">
+        delete from t_menu where id = #{id}
+    </delete>
+
+    <!--更新对象-->
+    <update id="update">
+        update t_menu set name = #{name},component = #{component},url = #{url},
+                          icon = #{icon},`index`= #{index},parent_id = #{parent.id},
+                          intro = #{intro},state = #{state} where id = #{id}
+    </update>
+
+    <!--加载对象-->
+    <select id="loadById" resultType="Menu">
+        select * from t_menu where id = #{id}
+    </select>
+
+    <!--加载所有对象-->
+    <select id="loadAll" resultType="Menu">
+        select * from t_menu
+    </select>
+
+    <!--查询总数=参数（查询对象），返回值：long-->
+    <select id="queryCount" resultType="int">
+        select count(*) from t_menu m1
+        <include refid="whereSql"/>
+    </select>
+
+    <!--查询当前页数据=参数（查询对象），返回值:List-->
+    <select id="queryData" resultMap="MenuMap">
+        select m1.*,m2.id mid,m2.name mname from t_menu m1 left join t_menu m2 on m1.parent_id = m2.id
+        <include refid="whereSql"/>
+        limit #{begin},#{pageSize}
+    </select>
+    <resultMap id="MenuMap" type="Menu">
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="component" property="component" />
+        <result column="url" property="url" />
+        <result column="icon" property="icon" />
+        <result column="index" property="index" />
+        <result column="parent_id" property="parent_id" />
+        <result column="intro" property="intro" />
+        <result column="state" property="state" />
+        <association property="parent" javaType="Menu">
+            <result column="mid" property="id" />
+            <result column="mname" property="name" />
+        </association>
+    </resultMap>
+
+    <sql id="whereSql">
+        <where>
+            <if test="keyword!=null and keyword!=''">
+                and (m1.name like concat('%',#{keyword},'%'))
+            </if>
+        </where>
+    </sql>
+
+    <!--批量删除-->
+    <delete id="patchDel">
+        delete from t_menu where id in
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xzz.system.domain.Menu">
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="component" property="component" />
+        <result column="url" property="url" />
+        <result column="icon" property="icon" />
+        <result column="index" property="index" />
+        <result column="parent_id" property="parent_id" />
+        <result column="intro" property="intro" />
+        <result column="state" property="state" />
+    </resultMap>
+</mapper>

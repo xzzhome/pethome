@@ -1,5 +1,6 @@
 package com.xzz.org.controller;
 
+import com.xzz.basic.annotation.PreAuthorize;
 import com.xzz.basic.query.PageList;
 import com.xzz.basic.util.JsonResult;
 import com.xzz.org.domain.Department;
@@ -23,6 +24,7 @@ public class DepartmentController {
     //查询单个对象
     @GetMapping("/{id}")
     @ApiOperation(value = "通过ID查询" )
+    @PreAuthorize(name = "通过ID查询部门列表",value = "department:findOne")
     public Department findOne(@PathVariable("id") Long id){
         return departmentService.findById(id);
     }
@@ -30,6 +32,7 @@ public class DepartmentController {
     //查询所有对象
     @GetMapping
     @ApiOperation(value = "查询所有对象" )
+    @PreAuthorize(name = "查询所有对象部门列表",value = "department:findAll")
     public List<Department> findAll(){
         return departmentService.findAll();
     }
@@ -37,6 +40,7 @@ public class DepartmentController {
     //删除
     @DeleteMapping("/{id}")
     @ApiOperation(value = "通过ID删除" )
+    @PreAuthorize(name = "通过ID删除部门列表",value = "department:delete")
     public JsonResult delete(@PathVariable("id") Long id){
         try {
             departmentService.del(id);
@@ -50,6 +54,7 @@ public class DepartmentController {
     //批量删除
     @PatchMapping
     @ApiOperation(value = "批量删除接口")
+    @PreAuthorize(name = "批量删除部门列表",value = "department:patchDelete")
     public JsonResult patchDelete(@RequestBody List<Long> ids){
         try {
             departmentService.patchDelete(ids);
@@ -63,6 +68,7 @@ public class DepartmentController {
     //添加或修改
     @PutMapping
     @ApiOperation(value = "添加或修改" )
+    @PreAuthorize(name = "添加或修改部门列表",value = "department:addOrUpdate")
     public JsonResult addOrUpdate(@RequestBody Department department){
         try {
             if(department.getId()==null){
@@ -80,6 +86,7 @@ public class DepartmentController {
     //分页查询或高级查询
     @PostMapping
     @ApiOperation(value = "分页查询或高级查询" )
+    @PreAuthorize(name = "分页查询或高级查询",value = "department:queryPage")
     public PageList<Department> queryPage(@RequestBody DepartmentQuery departmentQuery){
         return departmentService.queryPage(departmentQuery);
     }
@@ -87,6 +94,7 @@ public class DepartmentController {
     //查询部门树
     @GetMapping("/deptTree")
     @ApiOperation(value = "获取部门树-无限极接口")
+    @PreAuthorize(name = "获取部门树",value = "department:deptTree")
     public List<Department> deptTree(){
         return departmentService.deptTree();
     }

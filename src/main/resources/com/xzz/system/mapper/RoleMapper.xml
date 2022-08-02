@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzz.system.mapper.RoleMapper">
+
+    <!-- 删除中间表：void removeRolePermissionByRoldId(Long id); -->
+    <delete id="removeRolePermissionByRoldId">
+        delete from t_role_permission where role_id=#{id}
+    </delete>
+
+    <!-- 删除中间表：void removeRoleMenuByRoldId(Long id); -->
+    <delete id="removeRoleMenuByRoldId">
+        delete from t_role_menu where role_id=#{id}
+    </delete>
+
+    <!-- 添加中间表信息：void saveRolePermissons(@Param("roleId")Long roleId, @Param("permissions")List<Long> permissions); -->
+    <insert id="saveRolePermissons">
+        insert into t_role_permission (role_id, permission_id) values
+        <foreach collection="permissions" item="pid" separator=",">
+            (#{roleId},#{pid})
+        </foreach>
+    </insert>
+
+    <!-- 添加中间表信息：void saveRoleMenus(@Param("roleId")Long roleId, @Param("menus")List<Long> menus); -->
+    <insert id="saveRoleMenus">
+        insert into t_role_menu (role_id, menu_id) values
+        <foreach collection="menus" item="mid" separator=",">
+            (#{roleId},#{mid})
+        </foreach>
+    </insert>
+
+    <!--保存一个对象：void save(Role role);-->
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into t_role(name,sn) values (#{name},#{sn})
+    </insert>
+
+    <!--移除一个对象：void remove(Long id);-->
+    <delete id="remove" parameterType="Long">
+        DELETE FROM t_role WHERE id=#{id}
+    </delete>
+
+    <!--更新一个对象：void update(Role role);-->
+    <update id="update" parameterType="Role">
+        UPDATE t_role SET name=#{name},sn=#{sn}  WHERE id=#{id}
+    </update>
+
+    <!--加载一个对象：Role loadById(Long id);-->
+    <select id="loadById" parameterType="Long" resultType="Role">
+        SELECT * FROM t_role WHERE id=#{id}
+    </select>
+
+    <!--加载所有对象：List<Role> loadAll();-->
+    <select id="loadAll" resultType="Role">
+        SELECT * FROM t_role
+    </select>
+
+    <!--批量删除-->
+    <delete id="patchDelete">
+        delete from t_role where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--分页：查询总数量：Long queryCount(role query);-->
+    <select id="queryCount" resultType="Integer" >
+        SELECT count(*) FROM t_role
+        <include refid="querySql"></include>
+    </select>
+
+    <!--主表查询结果表-->
+    <select id="queryData" resultType="Role" >
+        select * from t_role
+        <include refid="querySql"></include>
+        limit #{begin},#{pageSize}
+    </select>
+
+    <!--高级查询与分页绑定，对keyword对totals和data，都产生影响后，展示数据-->
+    <sql id="querySql">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and name like concat("%",#{keyword},"%")
+            </if>
+        </where>
+    </sql>
+
+
+
+</mapper>
