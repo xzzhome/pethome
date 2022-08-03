@@ -3,6 +3,26 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xzz.org.mapper.EmployeeMapper">
+    <!-- 查询当前登录人的所有权限：t_permission中的sn：List<String> loadPerssionSnByLogininfoId(Long id); -->
+    <select id="loadPerssionSnByLogininfoId" resultType="String">
+        select tp.sn from t_employee te
+            join t_employee_role ter on te.id = ter.employee_id
+            join t_role tr on ter.role_id = tr.id
+            join t_role_permission trp on tr.id = trp.role_id
+            join t_permission tp on tp.id = trp.permission_id
+        where te.logininfo_id = #{id}
+    </select>
+
+    <!-- 删除t_employee:删除中间表信息：void removeEmployeeRoleByEmployeeId(Long id); -->
+    <delete id="removeEmployeeRoleByEmployeeId">
+        delete from t_employee_role where employee_id=#{id}
+    </delete>
+
+    <!-- 添加t_employee：void saveEmployeeRole(Employee employee); -->
+    <insert id="saveEmployeeRole">
+        insert into t_employee_role (employee_id, role_id)
+        values (#{id},#{role_id})
+    </insert>
 
     <!--保存一个对象：void save(Employee employee);-->
     <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
@@ -37,37 +57,33 @@
         <include refid="querySql"></include>
     </select>
 
-    <resultMap id="EmployeeMap" type="Employee">
-        <!-- 普通属性 -->
-        <id property="id" column="id"></id>
-        <result property="username" column="username"></result>
-        <result property="phone" column="phone"></result>
-        <result property="email" column="email"></result>
-        <result property="salt" column="salt"></result>
-        <result property="password" column="password"></result>
-        <result property="age" column="age"></result>
-        <result property="state" column="state"></result>
-        <result property="department_id" column="department_id"></result>
-        <result property="logininfo_id" column="logininfo_id"></result>
-        <result property="shop_id" column="shop_id"></result>
-        <!-- 关联属性 -->
-        <association property="UserDept" javaType="Employee" column="department_id" select="findUserDept"></association>
-        <association property="shopManager" javaType="shop" column="shop_id" select="findshopManager"></association>
-    </resultMap>
-    <!--主表查询结果表-->
-    <select id="queryData" resultMap="EmployeeMap" >
-        select * from t_employee
+    <!--List<Employee> queryData(EmployeeQuery employeeQuery);-->
+    <select id="queryData" resultMap="EmployeeMap">
+        select e.*,d.id did,d.name dname,tr.id tid from t_employee e
+            left join t_department d on e.department_id = d.id
+            left join t_employee_role ter on e.id = ter.employee_id
+            left join t_role tr on ter.role_id = tr.id
         <include refid="querySql"></include>
         limit #{begin},#{pageSize}
     </select>
-    <!--员工查询结果表，id映射主表外键-->
-    <select id="findUserDept" resultType="Department">
-        select * from  t_department where id=#{department_id}
-    </select>
-    <!--上级查询结果表，id映射主表外键-->
-    <select id="findshopManager" resultType="Shop">
-        select * from t_shop where id=#{shop_id}
-    </select>
+    <resultMap id="EmployeeMap" type="Employee">
+        <id column="id" property="id"></id>
+        <result column="username" property="username"></result>
+        <result column="phone" property="phone"></result>
+        <result column="email" property="email"></result>
+        <result column="salt" property="salt"></result>
+        <result column="password" property="password"></result>
+        <result column="age" property="age"></result>
+        <result column="state" property="state"></result>
+        <result column="department_id" property="department_id"></result>
+        <result column="logininfo_id" property="logininfo_id"></result>
+        <result column="shop_id" property="shop_id"></result>
+        <result column="tid" property="role_id"></result>
+        <association property="UserDept" javaType="Department">
+            <id column="did" property="id"></id>
+            <result column="dname" property="name"></result>
+        </association>
+    </resultMap>
 
     <!--高级查询与分页绑定，对keyword对totals和data，都产生影响后，展示数据-->
     <sql id="querySql">

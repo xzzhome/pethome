@@ -20,6 +20,7 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements IRoleServi
     @Transactional
     @Override
     public void del(Long id) {
+        roleMapper.removeEmpRoleByRoldId(id);
         //删除中间表：t_role_permission
         roleMapper.removeRolePermissionByRoldId(id);
         //删除中间表：t_role_menu
@@ -56,7 +57,6 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements IRoleServi
             //添加中间表信息：t_role_permission
             roleMapper.saveRolePermissons(roleId, permissions);
         }
-
         //角色分配菜单
         List<Long> menus = role.getMenus();
         if(menus.size() > 0) {

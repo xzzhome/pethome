@@ -3,6 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xzz.system.mapper.RoleMapper">
+    <delete id="removeEmpRoleByRoldId">
+        delete from t_employee_role where role_id=#{id}
+    </delete>
 
     <!-- 删除中间表：void removeRolePermissionByRoldId(Long id); -->
     <delete id="removeRolePermissionByRoldId">
@@ -16,17 +19,17 @@
 
     <!-- 添加中间表信息：void saveRolePermissons(@Param("roleId")Long roleId, @Param("permissions")List<Long> permissions); -->
     <insert id="saveRolePermissons">
-        insert into t_role_permission (role_id, permission_id) values
+        insert into t_role_permission (role_id,permission_id) values
         <foreach collection="permissions" item="pid" separator=",">
-            (#{roleId},#{pid})
+            (#{id},#{pid})
         </foreach>
     </insert>
 
     <!-- 添加中间表信息：void saveRoleMenus(@Param("roleId")Long roleId, @Param("menus")List<Long> menus); -->
     <insert id="saveRoleMenus">
-        insert into t_role_menu (role_id, menu_id) values
+        insert into t_role_menu (role_id,menu_id) values
         <foreach collection="menus" item="mid" separator=",">
-            (#{roleId},#{mid})
+            (#{id},#{mid})
         </foreach>
     </insert>
 

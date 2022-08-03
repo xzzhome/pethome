@@ -1,5 +1,6 @@
 package com.xzz.org.controller;
 
+import com.xzz.basic.annotation.PreAuthorize;
 import com.xzz.basic.query.PageList;
 import com.xzz.basic.util.JsonResult;
 import com.xzz.org.domain.Employee;
@@ -23,6 +24,7 @@ public class EmployeeController {
     //查询单个对象
     @GetMapping("/{id}")
     @ApiOperation(value = "通过ID查询" )
+    @PreAuthorize(name = "通过ID查询员工列表",value = "employee:findOne")
     public Employee findOne(@PathVariable("id") Long id){
         return employeeService.findById(id);
     }
@@ -30,6 +32,7 @@ public class EmployeeController {
     //查询所有对象
     @GetMapping
     @ApiOperation(value = "查询所有对象" )
+    @PreAuthorize(name = "查询员工列表",value = "employee:findAll")
     public List<Employee> findAll(){
         return employeeService.findAll();
     }
@@ -37,6 +40,7 @@ public class EmployeeController {
     //删除
     @DeleteMapping("/{id}")
     @ApiOperation(value = "通过ID删除" )
+    @PreAuthorize(name = "通过ID删除员工列表",value = "employee:delete")
     public JsonResult delete(@PathVariable("id") Long id){
         try {
             employeeService.del(id);
@@ -50,6 +54,7 @@ public class EmployeeController {
     //批量删除
     @PatchMapping
     @ApiOperation(value = "批量删除接口")
+    @PreAuthorize(name = "批量删除员工",value = "employee:patchDelete")
     public JsonResult patchDelete(@RequestBody List<Long> ids){
         try {
             employeeService.patchDelete(ids);
@@ -63,6 +68,7 @@ public class EmployeeController {
     //添加或修改
     @PutMapping
     @ApiOperation(value = "添加或修改" )
+    @PreAuthorize(name = "添加或修改员工列表",value = "employee:addOrUpdate")
     public JsonResult addOrUpdate(@RequestBody Employee employee){
         try {
             if(employee.getId()==null){
@@ -80,6 +86,7 @@ public class EmployeeController {
     //分页查询或高级查询
     @PostMapping
     @ApiOperation(value = "分页查询或高级查询" )
+    @PreAuthorize(name = "分页查询或高级查询员工列表",value = "employee:queryPage")
     public PageList<Employee> queryPage(@RequestBody EmployeeQuery employeeQuery){
         return employeeService.queryPage(employeeQuery);
     }

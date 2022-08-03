@@ -1,5 +1,6 @@
 package com.xzz.system.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.xzz.basic.domain.BaseDomain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,5 +32,6 @@ public class Menu extends BaseDomain {
     //状态
     private Boolean state = true;
     //当前部门下的子部门
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Menu> children = new ArrayList<>();
 }

@@ -35,4 +35,6 @@ public class Employee{
     //店铺ID：为空=平台系统管理员，不为空=店铺管理员
     private Long shop_id;
     private Shop shopManager;
+    //方便从中间表中为当前员工添加角色
+    private Long role_id;
 }
