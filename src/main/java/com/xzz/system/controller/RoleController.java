@@ -24,7 +24,7 @@ public class RoleController {
     //查询单个对象
     @GetMapping("/{id}")
     @ApiOperation(value = "通过ID查询" )
-    @PreAuthorize(name = "通过ID查询权限角色列表",value = "role:findOne")
+    //@PreAuthorize(name = "通过ID查询权限角色列表",value = "role:findOne")
     public Role findOne(@PathVariable("id") Long id){
         return roleService.findById(id);
     }
@@ -32,7 +32,7 @@ public class RoleController {
     //查询所有对象
     @GetMapping
     @ApiOperation(value = "查询所有对象" )
-    @PreAuthorize(name = "查询所有权限角色列表",value = "role:findAll")
+    //@PreAuthorize(name = "查询所有权限角色列表",value = "role:findAll")
     public List<Role> findAll(){
         return roleService.findAll();
     }
@@ -40,7 +40,7 @@ public class RoleController {
     //删除
     @DeleteMapping("/{id}")
     @ApiOperation(value = "通过ID删除" )
-    @PreAuthorize(name = "通过ID删除权限角色列表",value = "role:delete")
+    //@PreAuthorize(name = "通过ID删除权限角色列表",value = "role:delete")
     public JsonResult delete(@PathVariable("id") Long id){
         try {
             roleService.del(id);
@@ -54,7 +54,7 @@ public class RoleController {
     //批量删除
     @PatchMapping
     @ApiOperation(value = "批量删除接口")
-    @PreAuthorize(name = "批量删除权限角色列表",value = "role:patchDelete")
+    //@PreAuthorize(name = "批量删除权限角色列表",value = "role:patchDelete")
     public JsonResult patchDelete(@RequestBody List<Long> ids){
         try {
             roleService.patchDelete(ids);
@@ -68,7 +68,7 @@ public class RoleController {
     //添加或修改
     @PutMapping
     @ApiOperation(value = "添加或修改" )
-    @PreAuthorize(name = "添加或修改权限角色列表",value = "role:addOrUpdate")
+    //@PreAuthorize(name = "添加或修改权限角色列表",value = "role:addOrUpdate")
     public JsonResult addOrUpdate(@RequestBody Role role){
         try {
             if(role.getId()==null){
@@ -86,7 +86,7 @@ public class RoleController {
     //分页查询或高级查询
     @PostMapping
     @ApiOperation(value = "分页查询或高级查询" )
-    @PreAuthorize(name = "分页查询或高级查询权限角色列表",value = "role:queryPage")
+    //@PreAuthorize(name = "分页查询或高级查询权限角色列表",value = "role:queryPage")
     public PageList<Role> queryPage(@RequestBody RoleQuery roleQuery){
         return roleService.queryPage(roleQuery);
     }

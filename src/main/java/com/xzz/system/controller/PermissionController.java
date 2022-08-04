@@ -24,7 +24,7 @@ public class PermissionController {
     //查询单个对象
     @GetMapping("/{id}")
     @ApiOperation(value = "通过ID查询" )
-    @PreAuthorize(name = "通过ID查询权限",value = "permission:findOne")
+    //@PreAuthorize(name = "通过ID查询权限",value = "permission:findOne")
     public Permission findOne(@PathVariable("id") Long id){
         return permissionService.findById(id);
     }
@@ -32,7 +32,7 @@ public class PermissionController {
     //查询所有对象
     @GetMapping
     @ApiOperation(value = "查询所有对象" )
-    @PreAuthorize(name = "查询所有权限",value = "permission:findAll")
+    //@PreAuthorize(name = "查询所有权限",value = "permission:findAll")
     public List<Permission> findAll(){
         return permissionService.findAll();
     }
@@ -40,7 +40,7 @@ public class PermissionController {
     //删除
     @DeleteMapping("/{id}")
     @ApiOperation(value = "通过ID删除" )
-    @PreAuthorize(name = "通过ID删除权限",value = "permission:delete")
+    //@PreAuthorize(name = "通过ID删除权限",value = "permission:delete")
     public JsonResult delete(@PathVariable("id") Long id){
         try {
             permissionService.del(id);
@@ -54,7 +54,7 @@ public class PermissionController {
     //批量删除
     @PatchMapping
     @ApiOperation(value = "批量删除接口")
-    @PreAuthorize(name = "批量删除权限",value = "permission:patchDelete")
+    //@PreAuthorize(name = "批量删除权限",value = "permission:patchDelete")
     public JsonResult patchDelete(@RequestBody List<Long> ids){
         try {
             permissionService.patchDelete(ids);
@@ -68,7 +68,7 @@ public class PermissionController {
     //添加或修改
     @PutMapping
     @ApiOperation(value = "添加或修改" )
-    @PreAuthorize(name = "添加或修改权限",value = "permission:addOrUpdate")
+    //@PreAuthorize(name = "添加或修改权限",value = "permission:addOrUpdate")
     public JsonResult addOrUpdate(@RequestBody Permission permission){
         try {
             if(permission.getId()==null){
@@ -86,7 +86,7 @@ public class PermissionController {
     //分页查询或高级查询
     @PostMapping
     @ApiOperation(value = "分页查询或高级查询" )
-    @PreAuthorize(name = "分页查询或高级查询权限",value = "permission:queryPage")
+    //@PreAuthorize(name = "分页查询或高级查询权限",value = "permission:queryPage")
     public PageList<Permission> queryPage(@RequestBody PermissionQuery permissionQuery){
         return permissionService.queryPage(permissionQuery);
     }

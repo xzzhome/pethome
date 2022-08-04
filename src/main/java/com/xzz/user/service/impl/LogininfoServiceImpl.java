@@ -3,12 +3,17 @@ package com.xzz.user.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.xzz.basic.Constant.VerifyCodeConstants;
 import com.xzz.basic.exception.BusinessException;
+import com.xzz.basic.jwt.JwtUtils;
+import com.xzz.basic.jwt.RsaUtils;
 import com.xzz.basic.service.impl.BaseServiceImpl;
 import com.xzz.basic.util.HttpUtil;
 import com.xzz.basic.util.JsonResult;
 import com.xzz.basic.util.Md5Utils;
 import com.xzz.basic.util.StrUtils;
+import com.xzz.org.mapper.EmployeeMapper;
+import com.xzz.system.domain.Menu;
 import com.xzz.user.constant.WxConstants;
+import com.xzz.user.domain.LoginData;
 import com.xzz.user.domain.Logininfo;
 import com.xzz.user.domain.User;
 import com.xzz.user.domain.Wxuser;
@@ -25,7 +30,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.security.PrivateKey;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +46,8 @@ public class LogininfoServiceImpl extends BaseServiceImpl<Logininfo> implements 
     private WxUserMapper wxUserMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private EmployeeMapper employeeMapper;
 
     @Autowired
     @Qualifier("redisTemplate")
@@ -72,16 +81,20 @@ public class LogininfoServiceImpl extends BaseServiceImpl<Logininfo> implements 
             throw new BusinessException("你的账号被冻结，请联系管理员!!!");
         }
 
-        //2.将token和登录信息对象 保存在 redis 30分钟有效
+        /*//2.将token和登录信息对象 保存在 redis 30分钟有效
         String token = UUID.randomUUID().toString();
         redisTemplate.opsForValue().set(token,logininfo,30, TimeUnit.MINUTES);
-
         //3.使用Map将token和登录对象绑定到JsonResult的resultObj中响应给前端
         Map<String,Object> map = new HashMap<>();
         map.put("token",token);
         logininfo.setSalt(null);
         logininfo.setPassword(null);
-        map.put("logininfo",logininfo);
+        map.put("logininfo",logininfo);*/
+
+        //登录成功通过jwt传给前端
+        logininfo.setSalt(null);
+        logininfo.setPassword(null);
+        Map<String,Object> map = loginSuccessJwtHandler(logininfo);
 
         return JsonResult.me().setResultObj(map);
     }
@@ -104,14 +117,20 @@ public class LogininfoServiceImpl extends BaseServiceImpl<Logininfo> implements 
         if(wxuser!=null && wxuser.getUser_id()!=null){
             //4.有 绑定过 - 直接免密登录【获取logininfo对象 登录】
             Logininfo logininfo = logininfoMapper.loadLogininfoByUserId(wxuser.getUser_id());
-            String token = UUID.randomUUID().toString();
+
+            /*String token = UUID.randomUUID().toString();
             //去掉密码和盐值 - 安全
             logininfo.setPassword(null);
             logininfo.setSalt(null);
             redisTemplate.opsForValue().set(token,logininfo,30, TimeUnit.MINUTES);
             Map<String, Object> map = new HashMap<>();
             map.put("token",token);
-            map.put("logininfo",logininfo);
+            map.put("logininfo",logininfo);*/
+            //登录成功通过jwt传给前端
+            logininfo.setSalt(null);
+            logininfo.setPassword(null);
+            Map<String,Object> map = loginSuccessJwtHandler(logininfo);
+
             return JsonResult.me().setResultObj(map);
 
         }else{
@@ -167,14 +186,19 @@ public class LogininfoServiceImpl extends BaseServiceImpl<Logininfo> implements 
 
         //8.做免密登录
         Logininfo logininfo = logininfoMapper.loadById(user.getLogininfo_id());
-        String token = UUID.randomUUID().toString();
+
+        /*String token = UUID.randomUUID().toString();
         //去掉密码和盐值 - 安全
         logininfo.setPassword(null);
         logininfo.setSalt(null);
         redisTemplate.opsForValue().set(token,logininfo,30, TimeUnit.MINUTES);
         Map<String, Object> map = new HashMap<>();
         map.put("token",token);
-        map.put("logininfo",logininfo);
+        map.put("logininfo",logininfo);*/
+        //登录成功通过jwt传给前端
+        logininfo.setSalt(null);
+        logininfo.setPassword(null);
+        Map<String,Object> map = loginSuccessJwtHandler(logininfo);
 
         return JsonResult.me().setResultObj(map);
     }
@@ -209,5 +233,37 @@ public class LogininfoServiceImpl extends BaseServiceImpl<Logininfo> implements 
         wxuser.setHeadimgurl(jsonObject.getString("headimgurl"));
         wxuser.setUnionid(jsonObject.getString("unionid"));
         return wxuser;
+    }
+
+    private Map<String, Object> loginSuccessJwtHandler(Logininfo logininfo) {
+        //创建LoginData对象用于等会通过私钥加密
+        LoginData loginData = new LoginData();
+        loginData.setLogininfo(logininfo);
+        Map<String, Object> map = new HashMap<>();
+        try {
+            //1.获取logininfo
+            if(logininfo.getType()==0){//管理员
+                //2.获取当前登陆人的所有权限 - sn
+                List<String> permissions = employeeMapper.loadPerssionSnByLogininfoId(logininfo.getId());
+                //3.获取当前登陆人的所有菜单 - 【难度】
+                List<Menu> menus = employeeMapper.loadMenusByLogininfoId(logininfo.getId());
+                loginData.setPermissions(permissions);
+                loginData.setMenus(menus);
+                //将当前登陆人的权限和菜单添加到map - 响应给前端
+                map.put("permissions",permissions);
+                map.put("menus",menus);
+            }
+            //4.通过私钥对登录信息进行加密 - jwtToken串
+            PrivateKey privateKey = RsaUtils.getPrivateKey(RsaUtils.class.getClassLoader()                                             	  .getResource("auth_rsa.pri").getFile());
+            //将登陆人信息加密得到jwtToken串
+            String jwtToken = JwtUtils.generateTokenExpireInMinutes(loginData, privateKey, 30);
+            //5.装到map返回
+            map.put("token",jwtToken);
+            map.put("logininfo",logininfo);
+            return map;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

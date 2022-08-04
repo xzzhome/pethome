@@ -3,6 +3,38 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xzz.org.mapper.EmployeeMapper">
+    <!-- 菜单权限：根据登录信息id查询当前登录人拥有的菜单：List<Menu> loadMenusByLogininfoId(Long id); -->
+    <select id="loadMenusByLogininfoId" resultMap="MenuMap2">
+        select tm2.*,tm.id tid,tm.name tname,tm.component tcomponent,
+               tm.url turl,tm.icon ticon
+        from t_employee te
+                 join t_employee_role ter on te.id = ter.employee_id
+                 join t_role tr on ter.role_id = tr.id
+                 join t_role_menu trm on tr.id = trm.role_id
+                 join t_menu tm on trm.menu_id = tm.id
+                 join t_menu tm2 on tm.parent_id = tm2.id
+        where te.logininfo_id = #{id}
+    </select>
+    <resultMap id="MenuMap2" type="Menu">
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="component" property="component" />
+        <result column="url" property="url" />
+        <result column="icon" property="icon" />
+        <result column="index" property="index" />
+        <result column="parent_id" property="parent_id" />
+        <result column="intro" property="intro" />
+        <result column="state" property="state" />
+        <collection property="children" ofType="Menu">
+            <result column="tid" property="id" />
+            <result column="tname" property="name" />
+            <result column="tcomponent" property="component" />
+            <result column="turl" property="url" />
+            <result column="ticon" property="icon" />
+        </collection>
+    </resultMap>
+
+
     <!-- 查询当前登录人的所有权限：t_permission中的sn：List<String> loadPerssionSnByLogininfoId(Long id); -->
     <select id="loadPerssionSnByLogininfoId" resultType="String">
         select tp.sn from t_employee te

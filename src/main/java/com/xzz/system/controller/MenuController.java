@@ -33,7 +33,7 @@ public class MenuController {
      * @return Ajaxresult转换结果
      */
     @PutMapping
-    @PreAuthorize(name = "添加或修改权限菜单列表",value = "menu:addOrUpdate")
+    //@PreAuthorize(name = "添加或修改权限菜单列表",value = "menu:addOrUpdate")
     public JsonResult addOrUpdate(@RequestBody Menu menu){
         try {
             if( menu.getId()!=null)
@@ -53,7 +53,7 @@ public class MenuController {
      * @return
      */
     @DeleteMapping(value="/{id}")
-    @PreAuthorize(name = "通过ID删除权限菜单列表",value = "menu:delete")
+    @PreAuthorize(name = "删除菜单",value = "menu:delete")
     public JsonResult delete(@PathVariable("id") Long id){
         try {
             menuService.del(id);
@@ -71,7 +71,7 @@ public class MenuController {
      */
     @PatchMapping
     @ApiOperation(value = "批量删除接口")
-    @PreAuthorize(name = "通过ID批量删除权限菜单列表",value = "menu:patchDelete")
+    //@PreAuthorize(name = "通过ID批量删除权限菜单列表",value = "menu:patchDelete")
     public JsonResult patchDelete(@RequestBody List<Long> ids){
         try {
             menuService.patchDelete(ids);
@@ -88,7 +88,7 @@ public class MenuController {
      * @param id
      */
     @GetMapping("/{id}")
-    @PreAuthorize(name = "通过ID查询权限菜单列表",value = "menu:findOne")
+    //@PreAuthorize(name = "通过ID查询权限菜单列表",value = "menu:findOne")
     public Menu findOne(@PathVariable("id")Long id) {
         return menuService.findById(id);
     }
@@ -99,7 +99,7 @@ public class MenuController {
      * @return
      */
     @GetMapping
-    @PreAuthorize(name = "查询所有权限菜单列表",value = "menu:findAll")
+    //@PreAuthorize(name = "查询所有权限菜单列表",value = "menu:findAll")
     public List<Menu> findAll(){
         return menuService.findAll();
     }
@@ -111,7 +111,7 @@ public class MenuController {
      * @return PageList 分页对象
      */
     @PostMapping
-    @PreAuthorize(name = "分页查询或高级查询权限菜单",value = "menu:queryPage")
+    //@PreAuthorize(name = "分页查询或高级查询权限菜单",value = "menu:queryPage")
     public PageList<Menu> queryPage(@RequestBody MenuQuery query) {
         return menuService.queryPage(query);
     }
@@ -123,7 +123,7 @@ public class MenuController {
      */
     @GetMapping("/menuTree")
     @ApiOperation(value = "获取菜单树-无限极接口")
-    @PreAuthorize(name = "查询菜单树",value = "menu:menuTree")
+    //@PreAuthorize(name = "查询菜单树",value = "menu:menuTree")
     public List<Menu> menuTree(){
         return menuService.menuTree();
     }
