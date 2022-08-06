@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzz.pet.mapper.PetMapper">
+
+    <!--保存一个对象：void save(User user);-->
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into t_pet(name,costprice,saleprice,type_id,resources,state,offsaletime,onsaletime,createtime,shop_id,user_id,search_master_msg_id) values
+            (#{name},#{costprice},#{saleprice},#{type_id},#{resources},#{state},#{offsaletime},#{onsaletime},#{createtime},#{shop_id},#{user_id},#{search_master_msg_id})
+    </insert>
+
+    <!--移除一个对象：void remove(Long id);-->
+    <delete id="remove" parameterType="Long">
+        DELETE FROM t_pet WHERE id=#{id}
+    </delete>
+
+    <!--更新一个对象：void update(User user);-->
+    <update id="update" parameterType="Pet">
+        UPDATE t_pet SET
+                name=#{name},
+                costprice=#{costprice},
+                saleprice=#{saleprice},
+                type_id=#{type_id},
+                resources=#{resources},
+                state=#{state},
+                offsaletime=#{offsaletime},
+                onsaletime=#{onsaletime},
+                createtime=#{createtime},
+                shop_id=#{shop_id},
+                user_id=#{user_id},
+                search_master_msg_id=#{search_master_msg_id}
+        WHERE id=#{id}
+    </update>
+
+    <!--加载一个对象：User loadById(Long id);-->
+    <select id="loadById" resultType="Pet">
+        SELECT * FROM t_pet WHERE id=#{id}
+    </select>
+
+    <!--加载所有对象：List<User> loadAll();-->
+    <select id="loadAll" resultType="Pet">
+        SELECT * FROM t_pet
+    </select>
+
+    <!--查询总数=参数（查询对象），返回值：long-->
+    <select id="queryCount" resultType="int">
+        select count(*) from t_pet tp
+        <include refid="querySql"/>
+    </select>
+
+    <!--查询当前页数据=参数（查询对象），返回值:List-->
+    <select id="queryData" resultMap="PetMap">
+        select tp.*,tpt.id tid,tpt.name tname,tpt.dirPath,ts.id sid,ts.name sname,tu.id uid,tu.username,
+        tpd.id tpdid,tpd.pet_id,tpd.intro,tpd.adoptNotice
+        from t_pet tp
+        left join t_pet_type tpt on tp.type_id = tpt.id
+        left join t_shop ts on tp.shop_id = ts.id
+        left join t_user tu on tp.user_id = tu.id
+        left join t_pet_detail tpd on tp.id = tpd.pet_id
+        <include refid="querySql"/>
+        order by tp.id
+        limit #{begin},#{pageSize}
+    </select>
+
+    <resultMap id="PetMap" type="Pet">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="costprice" property="costprice" />
+        <result column="saleprice" property="saleprice" />
+        <result column="type_id" property="type_id" />
+        <result column="resources" property="resources" />
+        <result column="state" property="state" />
+        <result column="offsaletime" property="offsaletime" />
+        <result column="onsaletime" property="onsaletime" />
+        <result column="createtime" property="createtime" />
+        <result column="shop_id" property="shop_id" />
+        <result column="user_id" property="user_id" />
+        <result column="search_master_msg_id" property="search_master_msg_id" />
+        <association property="type" javaType="PetType">
+            <result column="tid" property="id" />
+            <result column="tname" property="name" />
+            <result column="dirPath" property="dirPath" />
+        </association>
+        <association property="shop" javaType="Shop">
+            <result column="sid" property="id" />
+            <result column="sname" property="name" />
+        </association>
+        <association property="user" javaType="User">
+            <result column="sid" property="id" />
+            <result column="username" property="username" />
+        </association>
+        <association property="petDetail" javaType="PetDetail">
+            <result column="tpdid" property="id" />
+            <result column="intro" property="intro" />
+            <result column="pet_id" property="pet_id" />
+            <result column="adoptNotice" property="adoptNotice" />
+        </association>
+    </resultMap>
+
+    <!--高级查询与分页绑定，对keyword对totals和data，都产生影响后，展示数据-->
+    <sql id="querySql">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and tp.name like concat("%",#{keyword},"%")
+            </if>
+        </where>
+    </sql>
+
+    <!--批量删除-->
+    <delete id="patchDelete">
+        delete from t_pet where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 宠物上架：void onsale(Map<String, Object> params); -->
+    <update id="onsale" parameterType="map">
+        update t_pet set onsaletime = #{onsaletime},state = 1 where id = #{id}
+    </update>
+
+    <!-- 宠物下架：void offsale(Map<String, Object> params); -->
+    <update id="offsale" parameterType="map">
+        update t_pet set offsaletime = #{offsaletime},state = 0 where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>

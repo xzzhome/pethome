@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzz.pet.mapper.PetDetailMapper">
+    <!--保存一个对象：void save(User user);-->
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into t_pet_detail(pet_id,adoptNotice,intro) values
+            (#{pet_id},#{adoptNotice},#{intro})
+    </insert>
+
+    <!--移除一个对象：void remove(Long id);-->
+    <delete id="remove" parameterType="Long">
+        DELETE FROM t_pet_detail WHERE id=#{id}
+    </delete>
+
+    <!--更新一个对象：void update(User user);-->
+    <update id="update" parameterType="PetDetail">
+        UPDATE t_pet_detail SET pet_id=#{pet_id}, adoptNotice=#{adoptNotice}, intro=#{intro}
+        WHERE id=#{id}
+    </update>
+
+    <!--加载一个对象：User loadById(Long id);-->
+    <select id="loadById" resultType="PetDetail">
+        SELECT * FROM t_pet_detail WHERE id=#{id}
+    </select>
+
+    <!--加载所有对象：List<User> loadAll();-->
+    <select id="loadAll" resultType="PetDetail">
+        SELECT * FROM t_pet_detail
+    </select>
+
+    <!--void delPetDetailByPetId(Long id);-->
+    <delete id="delPetDetailByPetId" parameterType="Long">
+        DELETE FROM t_pet_detail WHERE pet_id=#{id}
+    </delete>
+
+
+</mapper>

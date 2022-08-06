@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzz.pet.mapper.PetTypeMapper">
+
+    <!--加载所有对象：List<User> loadAll();-->
+    <select id="loadAll" resultType="PetType">
+        SELECT * FROM t_pet_type
+    </select>
+
+
+</mapper>
