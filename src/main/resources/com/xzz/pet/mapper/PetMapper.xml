@@ -34,8 +34,15 @@
     </update>
 
     <!--加载一个对象：User loadById(Long id);-->
-    <select id="loadById" resultType="Pet">
-        SELECT * FROM t_pet WHERE id=#{id}
+    <select id="loadById" resultMap="PetMap">
+        select tp.*,tpt.id tid,tpt.name tname,tpt.dirPath,ts.id sid,ts.name sname,tu.id uid,tu.username,
+               tpd.id tpdid,tpd.pet_id,tpd.intro,tpd.adoptNotice
+        from t_pet tp
+                 left join t_pet_type tpt on tp.type_id = tpt.id
+                 left join t_shop ts on tp.shop_id = ts.id
+                 left join t_user tu on tp.user_id = tu.id
+                 left join t_pet_detail tpd on tp.id = tpd.pet_id
+        where tp.id = #{id}
     </select>
 
     <!--加载所有对象：List<User> loadAll();-->
@@ -104,6 +111,13 @@
             <if test="keyword != null and keyword != ''">
                 and tp.name like concat("%",#{keyword},"%")
             </if>
+            <!-- 如果为null，后台系统分页查询，如果不为null,就是前台系统分页查询 -->
+            <if test="state != null">
+                and tp.state = #{state}
+            </if>
+            <if test="shopId != null">
+                and tp.shop_id = #{shopId}
+            </if>
         </where>
     </sql>
 
@@ -117,7 +131,10 @@
 
     <!-- 宠物上架：void onsale(Map<String, Object> params); -->
     <update id="onsale" parameterType="map">
-        update t_pet set onsaletime = #{onsaletime},state = 1 where id = #{id}
+        update t_pet set onsaletime = #{onsaletime},state = 1 where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
     </update>
 
     <!-- 宠物下架：void offsale(Map<String, Object> params); -->

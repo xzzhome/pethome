@@ -72,53 +72,9 @@ public class PetServiceImpl extends BaseServiceImpl<Pet> implements IPetService 
     }
 
     @Override
-    public JsonResult onsale(List<Long> ids, HttpServletRequest request) {
-        //上架 -不能用批量操作，有上架审核
-        for (Long id : ids) {
-            //上架自动审核文本
-            Pet pet = petMapper.loadById(id);
-            String auditText = pet.getName();
-            Boolean textBoo = baiduAiAuditService.textAudit(auditText);
-            //审核图片：多张图片resources
-            String petResources = pet.getResources();
-            Boolean imageBoo = true;
-            if(!StringUtils.isEmpty(petResources)){
-                imageBoo = baiduAiAuditService.imageAudit(petResources);
-            }
-
-            //获取审核人
-            //Logininfo logininfo = (Logininfo) LoginContext.getLoginUser(request);
-            //Employee employee = employeeMapper.loadByLogininfoId(logininfo.getId());
-
-            //审核通过
-            if (textBoo && imageBoo){
-                //数据库操作
-                Map<String,Object> params = new HashMap<>();
-                params.put("id",id);
-                params.put("onsaletime",new Date());
-                petMapper.onsale(params);
-                //审核成功-note
-
-                //记录审核日志
-                PetLog auditLog = new PetLog();
-                auditLog.setState(1);
-                auditLog.setPet_id(id);
-                //auditLog.setAudit_id(employee.getId());
-                auditLog.setNote("审核成功！");
-                petLogMapper.save(auditLog);
-            }else{
-                //审核失败-note-当前是下架状态，如果审核失败！
-                //记录审核日志
-                PetLog auditLog = new PetLog();
-                auditLog.setState(0);
-                auditLog.setPet_id(id);
-                //auditLog.setAudit_id(employee.getId());
-                auditLog.setNote("审核失败,宠物名称或图片不合法!!!");
-                petLogMapper.save(auditLog);
-                //审核失败，上架失败
-                return JsonResult.me().setMsg("上架失败！审核失败,宠物名称或图片不合法!!!");
-            }
-        }
+    public JsonResult onsale(List<Long> ids) {
+        Date date = new Date();
+        petMapper.onsale(ids,date);
         return JsonResult.me();
     }
 

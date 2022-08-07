@@ -14,7 +14,7 @@ import java.util.List;
 public interface IPetService extends IBaseService<Pet>  {
 
 
-    JsonResult onsale(List<Long> ids, HttpServletRequest request);
+    JsonResult onsale(List<Long> ids);
 
     JsonResult offsale(List<Long> ids, HttpServletRequest request);
 }

@@ -98,9 +98,9 @@ public class PetController {
 
     //上架接口
     @PostMapping("/onsale")
-    public JsonResult onsale(@RequestBody List<Long> ids, HttpServletRequest request){
+    public JsonResult onsale(@RequestBody List<Long> ids){
         try {
-            return petService.onsale(ids,request);
+            return petService.onsale(ids);
         } catch (Exception e) {
             e.printStackTrace();
             return JsonResult.me().setMsg("上架失败！"+e.getMessage());
