@@ -2,6 +2,17 @@ server:
   port: 8080 #端口号，默认是8080
 #连接数据库的四个必要参数，其他数据源参数有默认值
 spring:
+  freemarker:
+    allow-request-override: false
+    cache: true
+    check-template-location: true
+    charset: UTF-8
+    suffix: .ftl
+    templateEncoding: UTF-8
+    templateLoaderPath: classpath:/templates/
+    expose-request-attributes: true
+    expose-session-attributes: true
+    expose-spring-macro-helpers: true
   datasource:
     username: root
     password: 123456
@@ -34,4 +45,6 @@ mybatis:
 #配置日志等级
 logging:
   level:
-    cn.itsource: trace
+    com.xzz: trace
+templatedir: D:\java\works\7-14pethome\src\main\resources\templates
+htmldir: D:\java\works\pethome_front\pethome_user\freemarker

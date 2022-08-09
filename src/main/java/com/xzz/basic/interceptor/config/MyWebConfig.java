@@ -1,4 +1,4 @@
-package com.xzz.basic.config;
+package com.xzz.basic.interceptor.config;
 
 import com.xzz.basic.interceptor.LoginInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,7 @@
 package com.xzz.basic.service.impl;
 
 import com.xzz.basic.service.IBaiduAiAuditService;
+import com.xzz.basic.util.BaiduAuditUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -9,7 +10,7 @@ public class BaiduAiAuditServiceImpl implements IBaiduAiAuditService {
     @Override
     public Boolean textAudit(String auditText) {
         //@TODO - 自主研发 - 工具类BaiduAuditUtils
-        return true;
+        return BaiduAuditUtils.TextCensor(auditText);
     }
 
     /*
@@ -21,6 +22,11 @@ public class BaiduAiAuditServiceImpl implements IBaiduAiAuditService {
     @Override
     public Boolean imageAudit(String resources) {
         //@TODO - 自主研发 - 工具类BaiduAuditUtils
-        return true;
+        String[] resourcesArr = resources.split(",");
+        Boolean imgCensor = true;
+        for (String s : resourcesArr) {
+            imgCensor = BaiduAuditUtils.ImgCensor("http://123.207.27.208" + s);
+        }
+        return imgCensor;
     }
 }

@@ -3,6 +3,11 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xzz.user.mapper.UserMapper">
+    <!--User loadByLogininfoId(Long id);-->
+    <select id="loadByLogininfoId" resultType="User">
+        select * from t_user where logininfo_id = #{id}
+    </select>
+
     <!-- User loadByPhone(String phone);-->
     <select id="loadByPhone" resultType="User">
         select * from t_user where phone = #{phone}

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzz.pet.mapper.SearchMasterMsgMapper">
+
+    <!--保存一个对象：void save(User user);-->
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into t_search_master_msg(
+            title,state,name,age,gender,coat_color,resources,pet_type,price,address,user_id,shop_id,note
+        ) values
+        (
+         #{title},#{state},#{name},#{age},#{gender},#{coatColor},#{resources},#{petType},#{price},#{address},#{user_id},#{shop_id},#{note}
+         )
+    </insert>
+
+    <!--移除一个对象：void remove(Long id);-->
+    <delete id="remove">
+        DELETE FROM t_search_master_msg WHERE id=#{id}
+    </delete>
+
+    <!--更新一个对象：void update(User user);-->
+    <update id="update">
+        UPDATE t_search_master_msg SET
+            title=#{title},
+            state=#{state},
+            name=#{name},
+            age=#{age},
+            gender=#{gender},
+            coat_color=#{coatColor},
+            resources=#{resources},
+            pet_type=#{petType},
+            price=#{price},
+            address=#{address},
+            user_id=#{user_id},
+            shop_id=#{shop_id},
+            note=#{note}
+        WHERE id=#{id}
+    </update>
+
+    <!--加载一个对象：User loadById(Long id);-->
+    <select id="loadById" resultType="SearchMasterMsg">
+        SELECT * FROM t_search_master_msg WHERE id=#{id}
+    </select>
+
+    <!--加载所有对象：List<User> loadAll();-->
+    <select id="loadAll" resultType="SearchMasterMsg">
+        SELECT * FROM t_search_master_msg
+    </select>
+
+
+</mapper>
