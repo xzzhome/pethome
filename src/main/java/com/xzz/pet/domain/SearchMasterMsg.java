@@ -20,13 +20,18 @@ public class SearchMasterMsg extends BaseDomain {
     private Integer gender;
     private String coatColor;
     private String resources;
+
     private Long petType;
+    private PetType type;
+
     private BigDecimal price;
     private String address;
 
     private Long user_id;
+    private User user;
 
     private Long shop_id;
+    private Shop shop;
 
     private String note;
 }

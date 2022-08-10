@@ -95,4 +95,9 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee> implements IE
             del(id);
         }
     }
+
+    @Override
+    public List<Employee> findByshopId(Long shopId) {
+        return employeeMapper.findByshopId(shopId);
+    }
 }

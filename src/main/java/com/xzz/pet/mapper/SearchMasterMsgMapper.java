@@ -7,5 +7,5 @@ import com.xzz.pet.domain.SearchMasterMsg;
 
 public interface SearchMasterMsgMapper extends BaseMapper<SearchMasterMsg> {
 
-
+    void reject(Long id);
 }

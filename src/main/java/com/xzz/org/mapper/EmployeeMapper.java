@@ -16,4 +16,9 @@ public interface EmployeeMapper extends BaseMapper<Employee> {
     List<String> loadPerssionSnByLogininfoId(Long id);
 
     List<Menu> loadMenusByLogininfoId(Long id);
+
+    Employee loadByLogininfoId(Long id);
+
+    List<Employee> findByshopId(Long shopId);
+
 }

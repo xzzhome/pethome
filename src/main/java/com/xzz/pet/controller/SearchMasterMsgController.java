@@ -5,6 +5,7 @@ import com.xzz.basic.query.PageList;
 import com.xzz.basic.util.JsonResult;
 import com.xzz.basic.util.LoginContext;
 import com.xzz.pet.domain.SearchMasterMsg;
+import com.xzz.pet.dto.AcceptDto;
 import com.xzz.pet.query.SearchMasterMsgQuery;
 import com.xzz.pet.service.impl.SearchMasterMsgServiceImpl;
 import com.xzz.user.domain.Logininfo;
@@ -102,6 +103,56 @@ public class SearchMasterMsgController {
         } catch (Exception e) {
             e.printStackTrace();
             return JsonResult.me().setMsg("系统错误，稍后重试!!!");
+        }
+    }
+
+    // 待审核或驳回：查询待审核或驳回的寻主消息 - 平台管理员才能查询 - 可以通过按钮权限限制，这里不做判断
+    @PostMapping("/toAudit")
+    public PageList<SearchMasterMsg> toAudit(@RequestBody SearchMasterMsgQuery query){
+        query.setState(0);
+        return searchMasterMsgService.queryPage(query);
+    }
+
+    // 已完成：查询已完成的寻主消息 - 平台管理员才能查询 - 可以通过按钮权限限制，这里不做判断
+    @PostMapping("/finish")
+    public PageList<SearchMasterMsg> finish(@RequestBody SearchMasterMsgQuery query){
+        query.setState(2);
+        return searchMasterMsgService.queryPage(query);
+    }
+
+    // 待处理：查询审核通过并已经分配了店铺的寻主消息 - state=1，ShopId不为null
+    @PostMapping("/toHandle")
+    public PageList<SearchMasterMsg> toHandle(@RequestBody SearchMasterMsgQuery query,HttpServletRequest request){
+        return searchMasterMsgService.toHandle(query,request);
+    }
+
+    // 用户寻主列表：用于登录之后再个人中心查询自己所有状态的寻主消息
+    @PostMapping("/user")
+    public PageList<SearchMasterMsg> userSearchMasterMsg(@RequestBody SearchMasterMsgQuery query,HttpServletRequest request){
+        return searchMasterMsgService.userSearchMasterMsg(query,request);
+    }
+
+    // 拒单
+    @GetMapping("/reject/{id}")
+    public JsonResult reject(@PathVariable("id")Long id){
+        try {
+            searchMasterMsgService.reject(id);
+            return JsonResult.me();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonResult.me().setMsg("拒单失败！");
+        }
+    }
+
+    // 接单
+    @PostMapping("/accept")
+    public JsonResult accept(@RequestBody AcceptDto dto){
+        try {
+            searchMasterMsgService.accept(dto);
+            return JsonResult.me();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonResult.me().setMsg("接单失败！"+e.getMessage());
         }
     }
 

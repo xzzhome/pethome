@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzz.order.mapper.OrderPetAcquisitionMapper">
+
+    <!--保存一个对象：void save(User user);-->
+    <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into t_order_pet_acquisition(
+            orderSn,
+            digest,
+            lastcomfirmtime,
+            state,
+            price,
+            paytype,
+            pet_id,
+            user_id,
+            shop_id,
+            address,
+            emp_id,
+            search_master_msg_id
+        ) values
+            (
+                #{orderSn},
+                #{digest},
+                #{lastcomfirmtime},
+                #{state},
+                #{price},
+                #{paytype},
+                #{pet_id},
+                #{user_id},
+                #{shop_id},
+                #{address},
+                #{emp_id},
+                #{search_master_msg_id}
+            )
+    </insert>
+
+    <!--移除一个对象：void remove(Long id);-->
+    <delete id="remove">
+        DELETE FROM t_order_pet_acquisition WHERE id=#{id}
+    </delete>
+
+    <!--更新一个对象：void update(User user);-->
+    <update id="update">
+        UPDATE t_order_pet_acquisition SET
+            orderSn=#{orderSn},
+            digest=#{digest},
+            lastcomfirmtime=#{lastcomfirmtime},
+            state=#{state},
+            price=#{price},
+            paytype=#{paytype},
+            pet_id=#{pet_id},
+            user_id=#{user_id},
+            shop_id=#{shop_id},
+            address=#{address},
+            emp_id=#{emp_id},
+            search_master_msg_id=#{search_master_msg_id}
+        WHERE id=#{id}
+    </update>
+
+    <!--加载一个对象：User loadById(Long id);-->
+    <select id="loadById" resultType="OrderPetAcquisition">
+        SELECT * FROM t_order_pet_acquisition WHERE id=#{id}
+    </select>
+
+    <!--加载所有对象：List<User> loadAll();-->
+    <select id="loadAll" resultType="OrderPetAcquisition">
+        SELECT * FROM t_order_pet_acquisition
+    </select>
+
+    <!--loadByMsgId(msgId)-->
+    <select id="loadByMsgId" resultType="OrderPetAcquisition">
+        SELECT * FROM t_order_pet_acquisition WHERE search_master_msg_id=#{msgId}
+    </select>
+
+    <!--查询总数=参数（查询对象），返回值：long-->
+    <select id="queryCount" resultType="int">
+        select count(*) from t_order_pet_acquisition
+        <include refid="whereSql"/>
+    </select>
+
+    <!--查询当前页数据=参数（查询对象），返回值:List-->
+    <select id="queryData" resultType="OrderPetAcquisition">
+        select * from t_order_pet_acquisition
+        <include refid="whereSql"/>
+        limit #{begin},#{pageSize}
+    </select>
+
+    <sql id="whereSql">
+        <where>
+            <if test="keyword!=null and keyword!=''">
+                and name like concat('%',#{keyword},'%')
+            </if>
+            <if test="empId!=null">
+                and emp_id =#{empId}
+            </if>
+            <if test="shopId!=null">
+                and shop_id =#{shopId}
+            </if>
+        </where>
+    </sql>
+
+</mapper>

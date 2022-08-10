@@ -37,6 +37,12 @@ public class EmployeeController {
         return employeeService.findAll();
     }
 
+    @GetMapping("/list/{shopId}")
+    @ApiOperation(value = "查询所有对象" )
+    public List<Employee> findByshopId(@PathVariable("shopId") Long shopId){
+        return employeeService.findByshopId(shopId);
+    }
+
     //删除
     @DeleteMapping("/{id}")
     @ApiOperation(value = "通过ID删除" )
