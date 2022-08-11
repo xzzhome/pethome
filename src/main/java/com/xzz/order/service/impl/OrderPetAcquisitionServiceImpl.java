@@ -84,4 +84,19 @@ public class OrderPetAcquisitionServiceImpl extends BaseServiceImpl<OrderPetAcqu
         pet.setCostprice(money);
         petMapper.update(pet);
     }
+
+    /**
+     * 删除=取消订单
+     */
+    @Override
+    public void del(Long id) {
+        OrderPetAcquisition order = orderPetAcquisitionMapper.loadById(id);
+        order.setState(-1);
+        orderPetAcquisitionMapper.update(order);
+        //将寻主消息中的shop_id置空
+        searchMasterMsgMapper.reject(order.getSearch_master_msg_id());
+        //删除宠物 - 没有成功收购
+        petMapper.remove(order.getPet_id());
+
+    }
 }

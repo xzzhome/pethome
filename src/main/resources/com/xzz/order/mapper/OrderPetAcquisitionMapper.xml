@@ -90,7 +90,7 @@
     <sql id="whereSql">
         <where>
             <if test="keyword!=null and keyword!=''">
-                and name like concat('%',#{keyword},'%')
+                and orderSn like concat('%',#{keyword},'%')
             </if>
             <if test="empId!=null">
                 and emp_id =#{empId}
